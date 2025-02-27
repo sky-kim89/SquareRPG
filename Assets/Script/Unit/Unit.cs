@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Unity.Jobs;
 
 public enum eUnitStateType
 {
@@ -65,14 +66,15 @@ public class UnitData
     public string Name = string.Empty;
 
     public float AP = 1; //일반 공격
-    public float SP = 1; //스킬 공격
     public float HP = 1; //체력
+    public float SP = 1; //스킬 영향
     public float LP = 1; //리더쉽 (부하 관련)
 
     public int Level = 1; //레벨
 
     public int AddLevel = 0;
     public int UpGrade = 0;
+    public int AddUnitCount = 0;
 
     public float DamageRate = 1.0f;
 
@@ -83,7 +85,37 @@ public class UnitData
     public float MoveSpeed = 1;
 
     //public ISkill[] Skills = new ISkill[2];
-    //public Color[] UnitColors = new Color[5];
+    public Color[] UnitColors = new Color[5];
+
+    public UnitData HalfData()
+    {
+        UnitData data = new UnitData();
+
+        float def = GameManager.Instance.LP_def;
+        float addLp = GameManager.Instance.Lp;
+
+        data.AP = AP * (def + LP * addLp);
+        data.SP = SP * (def + LP * addLp);
+        data.HP = HP * (def + LP * addLp);
+        data.LP = LP * (def + LP * addLp);
+
+        data.DamageRate = DamageRate * (def + LP * addLp);
+
+        data.AttackRange = AttackRange * 0.9f;
+        return data;
+    }
+
+
+    public HeroSaveData GetSaveData()
+    {
+        HeroSaveData data = new HeroSaveData();
+        data.Name = Name;
+        data.AddLevel = AddLevel;
+        data.UpGrade = UpGrade;
+        data.AddUnitCount = AddUnitCount;
+
+        return data;
+    }
 }
 //스킬이 없는 기본 유닛 = 부하
 public class Unit : MonoBehaviour
@@ -105,61 +137,74 @@ public class Unit : MonoBehaviour
 
     protected Unit Target = null;
 
-    public float AP
-    {
-        get
-        {
-            return BuffUnitData.AP;
-        }
-    }
+    public float AP = 0;
+    public float HP = 0;
+    public float MaxHP = 0;
 
-    private float m_HP = 1;
-
-    public float HP
-    {
-        get
-        {
-            return m_HP;
-        }
-    }
-    public float MaxHP
-    {
-        get
-        {
-            return BuffUnitData.HP;
-        }
-    }
-
-    public float SP
-    {
-        get
-        {
-            return BuffUnitData.SP;
-        }
-    }
-
-    public float LP
-    {
-        get
-        {
-            return BuffUnitData.LP;
-        }
-    }
+    public bool isEnemy = false;
 
     // Update is called once per frame
     void Update()
     {
-        
+
+        Target = UnitManager.Instance.FindUnit(this);
+
+        if (InByUnitToAttackRange())
+        {
+            Attack();
+        }
+        else
+        {
+            Move(BuffUnitData.MoveSpeed);
+        }
+    }
+    //이동
+    public virtual void Move(float speed)
+    {
+        if (m_UnitState != eUnitStateType.Hiting && m_UnitState != eUnitStateType.Attacking && m_UnitState != eUnitStateType.Skilling)
+        {
+            Quaternion temp = Quaternion.LookRotation(transform.position - Target.transform.position);
+            transform.rotation = Quaternion.Euler(0, temp.eulerAngles.y, 0);
+
+            transform.Translate(Vector3.back * Time.deltaTime * speed); //전진
+        }
     }
 
-    public void Init(UnitData data)
+    protected virtual bool InByUnitToAttackRange()
+    {
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(transform.position, -transform.forward, BuffUnitData.AttackRange);
+        //if (Physics.Raycast(transform.position, -transform.forward, out hit, Data.AttackRange))
+        if (hits.Length > 0)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Unit unit = hits[i].transform.GetComponent<Unit>();
+                if (unit != null && isEnemy != unit.isEnemy)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public virtual void Init(UnitData data)
     {
         UnitData = data;
+        AP = data.AP * GameManager.Instance.Ap * (1f + data.Level * GameManager.Instance.Level);
+        HP = data.HP * GameManager.Instance.Hp * (1f + data.Level * GameManager.Instance.Level);
+        MaxHP = HP; 
     }
 
     //공격
     public virtual void Attack()
     {
+        if(m_UnitState == eUnitStateType.Move)
+        {
+            //미사일 공격을 어케하지.
+            //활, 검, 창?, 탱커, 힐, 법사
+        }
     }
 
     //피격
@@ -229,14 +274,5 @@ public class Unit : MonoBehaviour
         {
             action();
         }
-    }
-
-   
-    //찾는 방식에 따라 아군도 찾아오게 음... 고민이 필요함.
-    protected virtual Unit FindEnemy()
-    {
-        Unit target = null;
-        Target = target;
-        return target;
     }
 }

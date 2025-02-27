@@ -1,6 +1,9 @@
+using MyProjeckt;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public enum eFindUnitType
 {
@@ -9,27 +12,97 @@ public enum eFindUnitType
     //히어로 우선
     //부하 우선
 }
-public class UnitManager : MonoBehaviour
+public class UnitManager : Singleton<UnitManager>
 {
+    private List<Transform> MyPoint = new List<Transform>();
+    private List<Transform> EnemyPoint = new List<Transform>();
+
     private List<HeroUnit> MyHeroUniy = new List<HeroUnit>();
     private List<HeroUnit> EnemyHeroUniy = new List<HeroUnit>();
 
     private GameObject HeroPrefab = null;
     private GameObject UnitPrefab = null;
 
-    public Unit FindUnit(bool isEnemy, eFindUnitType findType = eFindUnitType.Range)
+    private List<Unit> UnitList = new List<Unit>();
+
+    public Unit FindUnit(Unit unit, eFindUnitType findType = eFindUnitType.Range)
     {
         Unit target = null;
+
+        switch (findType)
+        {
+            case eFindUnitType.Range:
+                {
+                    float dir = 100;
+                    for (int i = 0; i < UnitList.Count; i++)
+                    {
+                        float temp = Vector3.Distance(UnitList[i].transform.position, unit.transform.position);
+                        if (dir > temp)
+                        {
+                            target = UnitList[i];
+                            dir = temp;
+                        }
+                    }
+
+                    break;
+                }
+        }
+
         return target;
     }
+    
 
-    public void StartStage(int stage)
+    public void InitMyUnit()
     {
+        for (int i = 0; i < MyInfoManager.Instance.HeroSaveDatas.Count; i++)
+        {
+            HeroUnit hero = ObjectPool.Instance.GetObject<HeroUnit>(HeroPrefab, transform);
+            UnitData data = UnitRandomMachine.GetUnitData(MyInfoManager.Instance.HeroSaveDatas[i]);
+            hero.isEnemy = false;
+            hero.Init(data);
 
+            hero.transform.position = MyPoint[i].position;
+
+            for (int j = 0; j < data.LP + data.AddUnitCount; j++)
+            {
+                Unit unit = ObjectPool.Instance.GetObject<Unit>(UnitPrefab, transform);
+                unit.isEnemy = false;
+                unit.Init(data.HalfData());
+                hero.Units.Add(unit);
+            }
+            MyHeroUniy.Add(hero);
+
+            UnitList.Add(hero);
+            UnitList.AddRange(hero.Units);
+        }
     }
 
-    public void CreateUnit()
+    public void InitEnemyUnit(int stage)
     {
+        int temp = stage * stage;
+        int addCount = stage / 5;
+        for (int i = 0; i < stage; i++)
+        {
+            HeroUnit hero = ObjectPool.Instance.GetObject<HeroUnit>(HeroPrefab, transform);
+            UnitData data = UnitRandomMachine.GetUnitData((temp - i).ToString());
+            hero.isEnemy = true;
+            hero.Init(data.HalfData());
 
+            hero.transform.position = EnemyPoint[i].position;
+
+            for (int j = 0; j < data.LP + addCount; j++)
+            {
+                Unit unit = ObjectPool.Instance.GetObject<Unit>(UnitPrefab, transform);
+                unit.isEnemy = true;
+                unit.Init(data.HalfData());
+                hero.Units.Add(unit);
+            }
+
+            EnemyHeroUniy.Add(hero);
+
+            UnitList.Add(hero);
+            UnitList.AddRange(hero.Units);
+        }
     }
+
 }
