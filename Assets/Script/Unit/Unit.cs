@@ -38,7 +38,7 @@ public enum eJobType
     Assassin,
     Archer,
     Magician,
-    Healer,
+    Last
 }
 
 
@@ -143,6 +143,8 @@ public class Unit : MonoBehaviour
 
     public bool isEnemy = false;
 
+    public Skill Skill = null; // 평타
+    public List<Skill> SkillList = new List<Skill>();
     // Update is called once per frame
     void Update()
     {
@@ -163,6 +165,7 @@ public class Unit : MonoBehaviour
     {
         if (m_UnitState != eUnitStateType.Hiting && m_UnitState != eUnitStateType.Attacking && m_UnitState != eUnitStateType.Skilling)
         {
+            m_Animator.Play("Move");
             Quaternion temp = Quaternion.LookRotation(transform.position - Target.transform.position);
             transform.rotation = Quaternion.Euler(0, temp.eulerAngles.y, 0);
 
@@ -202,6 +205,7 @@ public class Unit : MonoBehaviour
     {
         if(m_UnitState == eUnitStateType.Move)
         {
+            m_Animator.Play("Attack");
             //미사일 공격을 어케하지.
             //활, 검, 창?, 탱커, 힐, 법사
         }
@@ -257,6 +261,7 @@ public class Unit : MonoBehaviour
     {
         //적을 죽일 경우 발동하는 스킬 발동용
     }
+    
     protected virtual void DelayAction(float delay, Action action)
     {
         if (gameObject.activeSelf)
