@@ -38,6 +38,8 @@ public class MyInfoManager
     //유닛정보
     public List<HeroSaveData> HeroSaveDatas = new List<HeroSaveData>();
     //보유자원 정보
+    public int Gold = 0;
+    public int Lovel = 0;
     //
 
 

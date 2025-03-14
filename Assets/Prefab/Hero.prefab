@@ -92,13 +92,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4657081595466658}
-  - component: {fileID: 114659448868089708}
+  - component: {fileID: -4872640719962753989}
   - component: {fileID: 114802368705508398}
   - component: {fileID: 8252966543037768644}
   - component: {fileID: 136966370876830208}
   - component: {fileID: 54023524953852994}
   m_Layer: 0
-  m_Name: Unit
+  m_Name: Hero
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -120,7 +120,7 @@ Transform:
   - {fileID: 7228190185535142085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 179.99998, z: 0}
---- !u!114 &114659448868089708
+--- !u!114 &-4872640719962753989
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1392186652909458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc52540e8cb15f3439a744aa189461e6, type: 3}
+  m_Script: {fileID: 11500000, guid: c5dca1c0f30094147ae1b772ae8a5d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_StateUI: {fileID: 0}
@@ -139,6 +139,7 @@ MonoBehaviour:
   HP: 0
   MaxHP: 0
   isEnemy: 0
+  Units: []
 --- !u!114 &114802368705508398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,7 +707,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4689889088705476}

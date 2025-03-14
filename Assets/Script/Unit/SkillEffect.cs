@@ -19,8 +19,6 @@ public class SkillEffect : MonoBehaviour
     [HideInInspector]
     public Action<int> CallBack;
     [HideInInspector]
-    public int MaxIndex = 0;
-    [HideInInspector]
     public int Index = 0;
 
     [SerializeField]
@@ -35,11 +33,10 @@ public class SkillEffect : MonoBehaviour
     [SerializeField]
     private GameObject m_ArrivalEffect = null;
 
-    public void Init(Unit target, int maxIndex, Action<int> callBack)
+    public void Init(Unit target, Action<int> callBack)
     {
         Target = target;
         CallBack = callBack;
-        MaxIndex = maxIndex;
         switch (m_MoveType)
         {
             case eSkillEffectMoveType.Move:
@@ -79,7 +76,10 @@ public class SkillEffect : MonoBehaviour
             ObjectPool.Instance.GetObject(m_ArrivalEffect, Target.transform);
         CallBack(Index);
         Index++;
-        if(MaxIndex <= Index)
-            ObjectPool.Instance.Restore(gameObject);
+    }
+
+    public void OnDisable()
+    {
+        ObjectPool.Instance.Restore(gameObject);
     }
 }

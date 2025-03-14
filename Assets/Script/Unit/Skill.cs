@@ -24,7 +24,7 @@ public class SkillData
 
     public string Icon = "";
 
-    public float CoolTime = 0;
+    public float MaxCoolTime = 0;
 
     public GameObject ActiveEffect = null;
     public SkillEffect TargetEffect = null;
@@ -32,7 +32,7 @@ public class SkillData
     public eSkillType SkillType = eSkillType.평타;
 
     //데미지, 버프 index
-    public List<int> Value = new List<int>();
+    public float Value = 1;
 }
 
 public abstract class Skill
@@ -41,6 +41,7 @@ public abstract class Skill
     public Unit Target = null;
 
     public SkillData Data;
+    public float CoolTime = 0;
 
     public virtual void Active(Unit unit, Unit target)
     {
@@ -51,13 +52,16 @@ public class ActiveSkill : Skill
 {
     public override void Active(Unit unit, Unit target)
     {
-        Unit = unit;
-        Target = target;
-        SkillEffect skillEffect = ObjectPool.Instance.GetObject<SkillEffect>(Data.TargetEffect.gameObject, target.transform);
-        skillEffect.Init(target, Data.Value.Count, (i) =>
+        if (Data.MaxCoolTime < CoolTime)
         {
-            target.Hit(new Damage(unit, Data.Value[i]));
-        });
+            Unit = unit;
+            Target = target;
+            SkillEffect skillEffect = ObjectPool.Instance.GetObject<SkillEffect>(Data.TargetEffect.gameObject, target.transform);
+            skillEffect.Init(target, (i) =>
+            {
+                target.Hit(new Damage(unit, Data.Value));
+            });
+        }
     }
 }
 

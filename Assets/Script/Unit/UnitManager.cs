@@ -14,13 +14,17 @@ public enum eFindUnitType
 }
 public class UnitManager : Singleton<UnitManager>
 {
+    [SerializeField]
     private List<Transform> MyPoint = new List<Transform>();
+    [SerializeField]
     private List<Transform> EnemyPoint = new List<Transform>();
 
     private List<HeroUnit> MyHeroUniy = new List<HeroUnit>();
     private List<HeroUnit> EnemyHeroUniy = new List<HeroUnit>();
 
+    [SerializeField]
     private GameObject HeroPrefab = null;
+    [SerializeField]
     private GameObject UnitPrefab = null;
 
     private List<Unit> UnitList = new List<Unit>();
@@ -58,16 +62,16 @@ public class UnitManager : Singleton<UnitManager>
         {
             HeroUnit hero = ObjectPool.Instance.GetObject<HeroUnit>(HeroPrefab, transform);
             UnitData data = UnitRandomMachine.GetUnitData(MyInfoManager.Instance.HeroSaveDatas[i]);
-            hero.isEnemy = false;
-            hero.Init(data);
+            //hero.isEnemy = false;
+            hero.Init(data, false);
 
             hero.transform.position = MyPoint[i].position;
 
             for (int j = 0; j < data.LP + data.AddUnitCount; j++)
             {
                 Unit unit = ObjectPool.Instance.GetObject<Unit>(UnitPrefab, transform);
-                unit.isEnemy = false;
-                unit.Init(data.HalfData());
+                //unit.isEnemy = false;
+                unit.Init(data.HalfData(), false);
                 hero.Units.Add(unit);
             }
             MyHeroUniy.Add(hero);
@@ -85,16 +89,16 @@ public class UnitManager : Singleton<UnitManager>
         {
             HeroUnit hero = ObjectPool.Instance.GetObject<HeroUnit>(HeroPrefab, transform);
             UnitData data = UnitRandomMachine.GetUnitData((temp - i).ToString());
-            hero.isEnemy = true;
-            hero.Init(data.HalfData());
+            //hero.isEnemy = true;
+            hero.Init(data.HalfData(), true);
 
             hero.transform.position = EnemyPoint[i].position;
 
             for (int j = 0; j < data.LP + addCount; j++)
             {
                 Unit unit = ObjectPool.Instance.GetObject<Unit>(UnitPrefab, transform);
-                unit.isEnemy = true;
-                unit.Init(data.HalfData());
+                //unit.isEnemy = true;
+                unit.Init(data.HalfData(), true);
                 hero.Units.Add(unit);
             }
 

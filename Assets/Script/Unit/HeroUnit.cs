@@ -6,8 +6,8 @@ public class HeroUnit : Unit
 {
     public List<Unit> Units = new List<Unit>();
 
-    public override void Init(UnitData data)
+    public override void Init(UnitData data, bool enemy)
     {
-        base.Init(data);
+        base.Init(data, enemy);
     }
 }

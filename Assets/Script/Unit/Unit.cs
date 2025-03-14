@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Unity.Jobs;
+using Unity.VisualScripting;
 
 public enum eUnitStateType
 {
     None = -1,
     Attack = 0,
     Hit = 1,
-    Hiting = 2,
     Move = 3,
-    Die = 4,
     Kill = 5,
     Start = 6,
     Skilling = 7,
     Attacking = 8,
-    Dieing = 9
+    Hiting = 11,
+    Die = 12,
+    Dieing = 13,
     //스턴 등 상태 이상 추가 필요
 }
 public enum eGradeType
@@ -84,7 +85,7 @@ public class UnitData
     public float AttackSpeed = 1.0f;
     public float MoveSpeed = 1;
 
-    //public ISkill[] Skills = new ISkill[2];
+    public Skill[] Skills = new Skill[2];
     public Color[] UnitColors = new Color[5];
 
     public UnitData HalfData()
@@ -145,25 +146,46 @@ public class Unit : MonoBehaviour
 
     public Skill Skill = null; // 평타
     public List<Skill> SkillList = new List<Skill>();
-    // Update is called once per frame
+
+    public virtual void Init(UnitData data, bool enemy)
+    {
+        UnitData = data;
+        AP = data.AP * GameManager.Instance.Ap * (1f + data.Level * GameManager.Instance.Level);
+        HP = data.HP * GameManager.Instance.Hp * (1f + data.Level * GameManager.Instance.Level);
+        MaxHP = HP;
+
+        Skill = new ActiveSkill();
+        SkillList.Clear();
+        SkillList.AddRange(data.Skills);
+        isEnemy = enemy;
+    }
+
     void Update()
     {
-
         Target = UnitManager.Instance.FindUnit(this);
 
-        if (InByUnitToAttackRange())
+        if (Target != null && m_UnitState < eUnitStateType.Hiting)
         {
-            Attack();
+            if (InByUnitToAttackRange())
+            {
+                Attack();
+            }
+            else
+            {
+                Move(BuffUnitData.MoveSpeed);
+            }
         }
-        else
+
+        Skill.CoolTime -= BuffUnitData.AttackSpeed;
+        for(int i = 0; i < SkillList.Count; i++)
         {
-            Move(BuffUnitData.MoveSpeed);
+            SkillList[i].CoolTime -= Time.deltaTime;
         }
     }
     //이동
     public virtual void Move(float speed)
     {
-        if (m_UnitState != eUnitStateType.Hiting && m_UnitState != eUnitStateType.Attacking && m_UnitState != eUnitStateType.Skilling)
+        if (m_UnitState < eUnitStateType.Hiting && m_UnitState != eUnitStateType.Attacking && m_UnitState != eUnitStateType.Skilling)
         {
             m_Animator.Play("Move");
             Quaternion temp = Quaternion.LookRotation(transform.position - Target.transform.position);
@@ -192,29 +214,25 @@ public class Unit : MonoBehaviour
         return false;
     }
 
-    public virtual void Init(UnitData data)
-    {
-        UnitData = data;
-        AP = data.AP * GameManager.Instance.Ap * (1f + data.Level * GameManager.Instance.Level);
-        HP = data.HP * GameManager.Instance.Hp * (1f + data.Level * GameManager.Instance.Level);
-        MaxHP = HP; 
-    }
-
     //공격
     public virtual void Attack()
     {
-        if(m_UnitState == eUnitStateType.Move)
+        if (Target != null)
         {
-            m_Animator.Play("Attack");
-            //미사일 공격을 어케하지.
-            //활, 검, 창?, 탱커, 힐, 법사
+            if (m_UnitState == eUnitStateType.Move)
+            {
+                m_Animator.Play("Attack");
+                Skill.Active(this, Target);
+                //미사일 공격을 어케하지.
+                //활, 검, 창?, 탱커, 힐, 법사
+            }
         }
     }
 
     //피격
     public virtual void Hit(Damage damage)
     {
-        if (m_UnitState != eUnitStateType.Dieing)
+        if (m_UnitState < eUnitStateType.Hiting)
         {
             m_UnitState = eUnitStateType.Hit;
             //ActiveSkillOperate(damage.Unit);
