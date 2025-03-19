@@ -28,17 +28,17 @@ public enum eGradeType
     Unique = 4,
     Epic = 5,
 
-    List = 6
+    Last = 6
 }
 
 //직업과 상관 없이 스킬을 갖고 있음.
-public enum eJobType
+public enum eWeaponType
 {
-    Warrior,
-    Tanker,
-    Assassin,
-    Archer,
-    Magician,
+    Sword,
+    Shield,
+    Dagger,
+    Bow,
+    Wand,
     Last
 }
 
@@ -62,7 +62,7 @@ public class UnitData
     //public eJobType JobType = eJobType.Warrior;
     //public eSizeType Size = eSizeType.Middle;
     public eGradeType Grade = eGradeType.Common;
-    public eJobType Job = eJobType.Warrior;
+    public eWeaponType Weapon = eWeaponType.Sword;
 
     public string Name = string.Empty;
 
@@ -77,11 +77,13 @@ public class UnitData
     public int UpGrade = 0;
     public int AddUnitCount = 0;
 
+    public int UnitCount { get { return (int)(LP * 0.5f) + AddUnitCount; } }
+
     public float DamageRate = 1.0f;
 
     public int Exp = 0;
 
-    public float AttackRange = 1;
+    public float AttackRange = 1.5f;
     public float AttackSpeed = 1.0f;
     public float MoveSpeed = 1;
 
@@ -94,6 +96,7 @@ public class UnitData
 
         float def = GameManager.Instance.LP_def;
         float addLp = GameManager.Instance.Lp;
+        data.Name = Name;
 
         data.AP = AP * (def + LP * addLp);
         data.SP = SP * (def + LP * addLp);
@@ -101,8 +104,15 @@ public class UnitData
         data.LP = LP * (def + LP * addLp);
 
         data.DamageRate = DamageRate * (def + LP * addLp);
+        data.Grade = Grade;
+        data.Level = Level;
+        data.AddLevel = AddLevel;
 
         data.AttackRange = AttackRange * 0.9f;
+        data.AttackSpeed = AttackSpeed;
+        data.UnitColors = UnitColors;
+        data.Weapon = Weapon;
+        data.MoveSpeed = MoveSpeed;
         return data;
     }
 
@@ -127,56 +137,135 @@ public class Unit : MonoBehaviour
     protected Animator m_Animator = null;
     [SerializeField]
     protected GameObject m_RootObj = null;
+    [SerializeField]
+    protected UnitColoring m_UnitColoring = null;
+    [SerializeField]
+    protected List<GameObject> m_WeaponObjs = new List<GameObject>();
+    [SerializeField]
+    protected List<GameObject> m_ArrowObjs = new List<GameObject>();
 
+    [SerializeField]
+    protected UnitData m_UnitData = null;
+    //버프가 생기면 생각해보기
+    protected UnitData m_BuffUnitData = null;
 
-    protected UnitData UnitData = null;
-    protected UnitData BuffUnitData = null;
-
-    protected eUnitStateType m_UnitState = eUnitStateType.None;
+    public eUnitStateType UnitState = eUnitStateType.None;
+    public bool isCanTarget { get { return UnitState != eUnitStateType.Die && UnitState != eUnitStateType.Dieing; } }
 
     protected List<Buff> m_Buffs = new List<Buff>();
 
-    protected Unit Target = null;
+    [SerializeField]
+    protected Unit m_Target = null;
 
     public float AP = 0;
     public float HP = 0;
     public float MaxHP = 0;
 
+    public float DamageRate = 0;
+
     public bool isEnemy = false;
 
-    public Skill Skill = null; // 평타
+    public AttackSkill AttackSkill = null; // 평타
     public List<Skill> SkillList = new List<Skill>();
 
     public virtual void Init(UnitData data, bool enemy)
     {
-        UnitData = data;
-        AP = data.AP * GameManager.Instance.Ap * (1f + data.Level * GameManager.Instance.Level);
-        HP = data.HP * GameManager.Instance.Hp * (1f + data.Level * GameManager.Instance.Level);
-        MaxHP = HP;
+        m_BuffUnitData = m_UnitData = data;
+        SetStats();
+        InitSkill();
 
-        Skill = new ActiveSkill();
-        SkillList.Clear();
-        SkillList.AddRange(data.Skills);
+        for (int i = 0; i < m_WeaponObjs.Count; i++)
+        {
+            m_WeaponObjs[i].SetActive(false);
+        }
+        
+        m_WeaponObjs[(int)data.Weapon].SetActive(true);
+
+        m_UnitColoring.ChangeColor(data.UnitColors);
+
         isEnemy = enemy;
+        m_StateUI.SetEnemy(isEnemy);
+        m_StateUI.ReSet();
+    }
+
+    private void InitSkill()
+    {
+        switch (m_UnitData.Weapon)
+        {
+            case eWeaponType.Bow:
+            case eWeaponType.Wand:
+                AttackSkill = new BowAttackSKill();
+                break;
+            case eWeaponType.Dagger:
+                AttackSkill = new AttackSkill();
+                AttackSkill.Data.Value = 0.65f;
+                break;
+            case eWeaponType.Sword:
+            case eWeaponType.Shield:
+                AttackSkill = new AttackSkill();
+                break;
+        }
+
+        SkillList.Clear();
+        //SkillList.AddRange(data.Skills);
+    }
+
+    private void SetStats()
+    {
+        float addAP = 1f;
+        float addHP = 1f;
+        switch (m_UnitData.Weapon)
+        {
+            case eWeaponType.Wand:
+                addAP = 1.1f;
+                break;
+            case eWeaponType.Sword:
+                addAP = 1.1f;
+                addHP = 1.1f;
+                break;
+            case eWeaponType.Shield:
+                addHP = 1.2f;
+                break;
+        }
+
+        AP = m_UnitData.AP * GameManager.Instance.Ap * (1f + m_UnitData.Level * GameManager.Instance.Level) * addAP;
+        if (AP < 1) AP = 1;
+        HP = m_UnitData.HP * GameManager.Instance.Hp * (1f + m_UnitData.Level * GameManager.Instance.Level) * addHP;
+        MaxHP = HP;
+        DamageRate = m_UnitData.DamageRate;
     }
 
     void Update()
     {
-        Target = UnitManager.Instance.FindUnit(this);
+        if (!isCanTarget)
+            return;
 
-        if (Target != null && m_UnitState < eUnitStateType.Hiting)
+        m_Target = UnitManager.Instance.FindUnit(this);
+
+        UnitState = eUnitStateType.None;
+
+        if (m_Target == null)
+        {
+            m_Animator.Play("Idle");
+        }
+        else if (UnitState < eUnitStateType.Hiting)
         {
             if (InByUnitToAttackRange())
             {
-                Attack();
+                if (AttackSkill.isCoolTime && UnitState != eUnitStateType.Attacking)
+                {
+                    m_Animator.Play("Attack_" + m_UnitData.Weapon.ToString());
+                    UnitState = eUnitStateType.Attacking;
+                }
+                //Attack();
             }
             else
             {
-                Move(BuffUnitData.MoveSpeed);
+                Move(m_BuffUnitData.MoveSpeed);
             }
         }
 
-        Skill.CoolTime -= BuffUnitData.AttackSpeed;
+        AttackSkill.CoolTime -= m_BuffUnitData.AttackSpeed * Time.deltaTime;
         for(int i = 0; i < SkillList.Count; i++)
         {
             SkillList[i].CoolTime -= Time.deltaTime;
@@ -185,10 +274,11 @@ public class Unit : MonoBehaviour
     //이동
     public virtual void Move(float speed)
     {
-        if (m_UnitState < eUnitStateType.Hiting && m_UnitState != eUnitStateType.Attacking && m_UnitState != eUnitStateType.Skilling)
+        if (UnitState < eUnitStateType.Hiting && UnitState != eUnitStateType.Attacking && UnitState != eUnitStateType.Skilling)
         {
             m_Animator.Play("Move");
-            Quaternion temp = Quaternion.LookRotation(transform.position - Target.transform.position);
+            UnitState = eUnitStateType.Move;
+            Quaternion temp = Quaternion.LookRotation(transform.position - m_Target.transform.position);
             transform.rotation = Quaternion.Euler(0, temp.eulerAngles.y, 0);
 
             transform.Translate(Vector3.back * Time.deltaTime * speed); //전진
@@ -198,7 +288,7 @@ public class Unit : MonoBehaviour
     protected virtual bool InByUnitToAttackRange()
     {
         RaycastHit[] hits;
-        hits = Physics.RaycastAll(transform.position, -transform.forward, BuffUnitData.AttackRange);
+        hits = Physics.RaycastAll(transform.position, -transform.forward, m_BuffUnitData.AttackRange);
         //if (Physics.Raycast(transform.position, -transform.forward, out hit, Data.AttackRange))
         if (hits.Length > 0)
         {
@@ -217,30 +307,29 @@ public class Unit : MonoBehaviour
     //공격
     public virtual void Attack()
     {
-        if (Target != null)
+        if (m_Target != null)
         {
-            if (m_UnitState == eUnitStateType.Move)
-            {
-                m_Animator.Play("Attack");
-                Skill.Active(this, Target);
-                //미사일 공격을 어케하지.
-                //활, 검, 창?, 탱커, 힐, 법사
-            }
+            AttackSkill.Active(this, m_Target);
+            UnitState = eUnitStateType.Attack;
+            //미사일 공격을 어케하지.
+            //활, 검, 창?, 탱커, 힐, 법사
         }
     }
 
     //피격
     public virtual void Hit(Damage damage)
     {
-        if (m_UnitState < eUnitStateType.Hiting)
+        if (UnitState < eUnitStateType.Hiting)
         {
-            m_UnitState = eUnitStateType.Hit;
+            UnitState = eUnitStateType.Hit;
             //ActiveSkillOperate(damage.Unit);
 
             //Job.Hit(damage);
+            HP -= damage.DamagePoint;
             float hp = (float)HP / (float)MaxHP;
 
-            m_StateUI.SetHP(hp);
+            if(m_StateUI != null)
+                m_StateUI.SetHP(hp);
             //m_StateUI.Hit(damage.Damage);
             if (HP <= 0)
             {
@@ -264,11 +353,12 @@ public class Unit : MonoBehaviour
         m_Animator.Play("Die");
         gameObject.DisableCollider();
 
-        m_UnitState = eUnitStateType.Dieing;
+        UnitState = eUnitStateType.Dieing;
+        m_StateUI.SetDisable();
 
         DelayAction(0.5f, () =>
         {
-            m_UnitState = eUnitStateType.Die;
+            UnitState = eUnitStateType.Die;
             m_RootObj.SetActive(false);
         });
         //ActiveSkillOperate(unit);
@@ -297,5 +387,10 @@ public class Unit : MonoBehaviour
         {
             action();
         }
+    }
+
+    public GameObject GetArrow()
+    {
+        return m_ArrowObjs[(int)m_UnitData.Weapon];
     }
 }

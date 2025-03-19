@@ -25,10 +25,12 @@ public class Damage
     {
         get
         {
-            return (int)(((float)m_Unit.AP) * DamageRate);
+            return (int)(((float)m_Unit.AP * (float)m_Unit.DamageRate) * DamageRate);
         }
     }
 
+    //스킬 데미지 증폭
     public float DamageRate = 1f;
+    //스킬 맞고 움직일 넉백(구현?)
     public float Knockback = 1f;
 }

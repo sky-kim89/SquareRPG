@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public enum eSkillEffectMoveType
 {
@@ -20,6 +20,8 @@ public class SkillEffect : MonoBehaviour
     public Action<int> CallBack;
     [HideInInspector]
     public int Index = 0;
+    [HideInInspector]
+    public List<Collider> HitColloders;
 
     [SerializeField]
     private AnimationCurve m_Curve;
@@ -51,23 +53,30 @@ public class SkillEffect : MonoBehaviour
     private Vector3 tempPos = Vector3.one;
     public void Update()
     {
-        float dis = Vector3.Distance(transform.position, Target.transform.position);
-        if (dis <= 0.1f)
+        if (m_Distance != 0)
         {
-            tempPos = transform.position;
-            Vector3 temp = Vector3.Lerp(transform.position, Target.transform.position, m_Time);
-            transform.position = new Vector3(temp.x, temp.y, m_Curve.Evaluate(1f - dis / m_Distance));
-            transform.rotation.SetLookRotation(tempPos - transform.position);
+            float dis = Vector3.Distance(transform.position, Target.transform.position);
+            if (dis >= 0.1f)
+            {
+                tempPos = transform.position;
+                Vector3 temp = Vector3.Lerp(transform.position, Target.transform.position, m_Time);
+                transform.position = new Vector3(temp.x, m_Curve.Evaluate(1f - dis / m_Distance), temp.z);
+                if(transform.position != tempPos)
+                    transform.rotation.SetLookRotation((transform.position - tempPos).normalized);
+                //Debug.Log(transform.eulerAngles);
 
-            m_Time += Time.deltaTime * m_Speed;
+                m_Time += Time.deltaTime * m_Speed;
+            }
+            else
+            {
+                m_Time = 0;
+                Active();
+                ObjectPool.Instance.Restore(gameObject);
+            }
         }
-        else
-        {
-            m_Time = 0;
-            Active();
-        }
 
-
+        if(Target != null && !Target.isCanTarget)
+            ObjectPool.Instance.Restore(gameObject);
     }
 
     public void Active()
@@ -78,8 +87,8 @@ public class SkillEffect : MonoBehaviour
         Index++;
     }
 
-    public void OnDisable()
-    {
-        ObjectPool.Instance.Restore(gameObject);
-    }
+    //public void OnDisable()
+    //{
+    //    ObjectPool.Instance.Restore(gameObject);
+    //}
 }

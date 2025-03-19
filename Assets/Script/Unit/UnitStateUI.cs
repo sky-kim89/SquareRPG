@@ -10,11 +10,12 @@ public class UnitStateUI : MonoBehaviour
     public Material EnemyMaterial = null;
     public Material AllyMaterial = null;
 
-    public void Respawn()
+    public void ReSet()
     {
         m_HPObj.transform.localScale = new Vector3(0.1f, 0.1f, 1f);
         m_CoolObj.transform.localScale = new Vector3(0.1f, 0.1f, 0);
-        m_HPObj.gameObject.SetActive(false);
+        //m_HPObj.gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     public void SetHP(float hp)
@@ -32,5 +33,11 @@ public class UnitStateUI : MonoBehaviour
     public void SetEnemy(bool isEnemy)
     {
         Unit.material = isEnemy ? EnemyMaterial : AllyMaterial;
+        Unit.gameObject.SetActive(!isEnemy);
+    }
+
+    public void SetDisable()
+    {
+        gameObject.SetActive(false);
     }
 }

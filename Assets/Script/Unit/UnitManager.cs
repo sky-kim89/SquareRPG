@@ -1,9 +1,7 @@
 using MyProjeckt;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public enum eFindUnitType
 {
@@ -40,11 +38,15 @@ public class UnitManager : Singleton<UnitManager>
                     float dir = 100;
                     for (int i = 0; i < UnitList.Count; i++)
                     {
-                        float temp = Vector3.Distance(UnitList[i].transform.position, unit.transform.position);
-                        if (dir > temp)
+                        if (UnitList[i] != unit && UnitList[i].isEnemy != unit.isEnemy &&
+                            UnitList[i].isCanTarget)
                         {
-                            target = UnitList[i];
-                            dir = temp;
+                            float temp = Vector3.Distance(UnitList[i].transform.position, unit.transform.position);
+                            if (dir > temp)
+                            {
+                                target = UnitList[i];
+                                dir = temp;
+                            }
                         }
                     }
 
@@ -67,10 +69,11 @@ public class UnitManager : Singleton<UnitManager>
 
             hero.transform.position = MyPoint[i].position;
 
-            for (int j = 0; j < data.LP + data.AddUnitCount; j++)
+            for (int j = 0; j < data.UnitCount; j++)
             {
                 Unit unit = ObjectPool.Instance.GetObject<Unit>(UnitPrefab, transform);
                 //unit.isEnemy = false;
+                unit.transform.position = hero.transform.position + new Vector3(0.6f * (1 + (int)(j * 0.1f)), 0, (j * 0.3f) * (j % 2 == 0 ? 1 : -1));
                 unit.Init(data.HalfData(), false);
                 hero.Units.Add(unit);
             }
@@ -85,19 +88,25 @@ public class UnitManager : Singleton<UnitManager>
     {
         int temp = stage * stage;
         int addCount = stage / 5;
-        for (int i = 0; i < stage; i++)
+        if (addCount > 10)
+            addCount = 10;
+        int unitCount = stage > 5 ? 5 : stage;
+        for (int i = 0; i < unitCount; i++)
         {
             HeroUnit hero = ObjectPool.Instance.GetObject<HeroUnit>(HeroPrefab, transform);
             UnitData data = UnitRandomMachine.GetUnitData((temp - i).ToString());
+            data.Level = stage;
             //hero.isEnemy = true;
             hero.Init(data.HalfData(), true);
 
             hero.transform.position = EnemyPoint[i].position;
 
-            for (int j = 0; j < data.LP + addCount; j++)
+            for (int j = 0; j < data.UnitCount + addCount; j++)
             {
                 Unit unit = ObjectPool.Instance.GetObject<Unit>(UnitPrefab, transform);
                 //unit.isEnemy = true;
+                unit.transform.position = hero.transform.position + new Vector3(-0.6f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.3f) * (j % 2 == 0 ? 1 : -1));
+                Debug.Log(-0.45f * (1 + (int)(j * 0.1f)));
                 unit.Init(data.HalfData(), true);
                 hero.Units.Add(unit);
             }

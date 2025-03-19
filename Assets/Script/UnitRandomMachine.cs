@@ -16,9 +16,21 @@
             int seed = NameToSeed(data.Name);
 
             Random.InitState(seed);
-
-            int index = Random.Range(1, (int)eGradeType.List);
+            data.Weapon = (eWeaponType)Random.Range((int)eWeaponType.Sword, (int)eWeaponType.Last);
+            int index = Random.Range(1, (int)eGradeType.Last);
             data.Grade = (eGradeType)index;
+            switch(data.Weapon)
+            {
+                case eWeaponType.Bow:
+                    data.AttackRange = Random.Range(10f, 12f); ;
+                    break;
+                case eWeaponType.Wand:
+                    data.AttackRange = Random.Range(6f, 8f); ;
+                    break;
+                default:
+                    data.AttackRange = 2f;
+                    break;
+            }
             SettingStats(data);
 
             index = Random.Range(0, Table.BobyColors.Length);
