@@ -30,11 +30,7 @@ public class BowAttackSKill : AttackSkill
         Target = target;
         SkillEffect skillEffect = ObjectPool.Instance.GetObject<SkillEffect>(unit.GetArrow(), target.transform);
         skillEffect.transform.position = unit.transform.position;
-        skillEffect.Init(target, (i) =>
-        {
-            target.Hit(new Damage(unit, Data.Value));
-        });
-
+        skillEffect.Init(target, new Damage(unit, Data.Value));
 
         CoolTime = Data.MaxCoolTime;
     }

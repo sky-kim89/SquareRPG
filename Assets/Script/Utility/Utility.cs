@@ -28,4 +28,48 @@ public static class Utility
             }
         }
     }
+
+    public static float GetBuffTypeToValue(this List<Buff> buffs, eBuffType type)
+    {
+        float value = 0;
+
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            for (eBuffType j = 0; j < eBuffType.Last; j++)
+            {
+                switch (j)
+                {
+                    case eBuffType.AP:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.HP:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.AddUnitCount:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.DamageRate:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.SkillDamageRate:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.AttackRange:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.AttackSpeed:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.MoveSpeed:
+                        value += buffs[i].BuffList[j];
+                        break;
+                    case eBuffType.SkillCoolTime:
+                        value *= (1f - buffs[i].BuffList[j]);
+                        break;
+                }
+            }
+        }
+
+        return value;
+    }
 }

@@ -106,7 +106,6 @@ public class UnitManager : Singleton<UnitManager>
                 Unit unit = ObjectPool.Instance.GetObject<Unit>(UnitPrefab, transform);
                 //unit.isEnemy = true;
                 unit.transform.position = hero.transform.position + new Vector3(-0.6f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.3f) * (j % 2 == 0 ? 1 : -1));
-                Debug.Log(-0.45f * (1 + (int)(j * 0.1f)));
                 unit.Init(data.HalfData(), true);
                 hero.Units.Add(unit);
             }

@@ -655,7 +655,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
   Index: 0
-  HitColloders: []
   m_Curve:
     serializedVersion: 2
     m_Curve:
@@ -5729,7 +5728,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
   Index: 0
-  HitColloders: []
   m_Curve:
     serializedVersion: 2
     m_Curve:
@@ -20712,6 +20710,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7228190185535142085}
     m_Modifications:
+    - target: {fileID: 29341831229033019, guid: e8daf441f9221f7418703ad5645a09ee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 838680172454471765, guid: e8daf441f9221f7418703ad5645a09ee, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.6950001
@@ -20752,9 +20754,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1789208291263635464, guid: e8daf441f9221f7418703ad5645a09ee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3925607911935479582, guid: e8daf441f9221f7418703ad5645a09ee, type: 3}
       propertyPath: m_Name
       value: Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 3948397073675616672, guid: e8daf441f9221f7418703ad5645a09ee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6652048346249194482, guid: e8daf441f9221f7418703ad5645a09ee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8405009644889127136, guid: e8daf441f9221f7418703ad5645a09ee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

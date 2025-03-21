@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using Unity.Jobs;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 
 public enum eUnitStateType
 {
@@ -39,7 +40,9 @@ public enum eWeaponType
     Dagger,
     Bow,
     Wand,
-    Last
+    Last,
+
+    ALL
 }
 
 
@@ -80,12 +83,13 @@ public class UnitData
     public int UnitCount { get { return (int)(LP * 0.5f) + AddUnitCount; } }
 
     public float DamageRate = 1.0f;
-
+    public float SkillDamageRate = 1.0f;
     public int Exp = 0;
 
     public float AttackRange = 1.5f;
     public float AttackSpeed = 1.0f;
     public float MoveSpeed = 1;
+    public float SkillCoolTime = 1;
 
     public Skill[] Skills = new Skill[2];
     public Color[] UnitColors = new Color[5];
@@ -162,6 +166,7 @@ public class Unit : MonoBehaviour
     public float MaxHP = 0;
 
     public float DamageRate = 0;
+    public float SkillDamageRate { get { return m_BuffUnitData.SP * GameManager.Instance.Sp * m_BuffUnitData.SkillDamageRate; } }
 
     public bool isEnemy = false;
 
@@ -170,9 +175,10 @@ public class Unit : MonoBehaviour
 
     public virtual void Init(UnitData data, bool enemy)
     {
-        m_BuffUnitData = m_UnitData = data;
+        m_UnitData = data;
         SetStats();
         InitSkill();
+        BuffDataUpdate();
 
         for (int i = 0; i < m_WeaponObjs.Count; i++)
         {
@@ -207,7 +213,36 @@ public class Unit : MonoBehaviour
         }
 
         SkillList.Clear();
-        //SkillList.AddRange(data.Skills);
+        SkillList.AddRange(m_UnitData.Skills);
+
+        for(int i = 0; i < SkillList.Count; i++)
+        {
+            if(SkillList[i] is PassiveSkill)
+                m_Buffs.Add((SkillList[i] as PassiveSkill).Buff);
+        }
+    }
+
+    private void BuffDataUpdate()
+    {
+        float AP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AP);
+        float HP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.HP);
+        float AddUnitCount = m_Buffs.GetBuffTypeToValue(eBuffType.AddUnitCount);
+        float DamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.DamageRate);
+        float SkillDamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.SkillDamageRate);
+        float AttackRange = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackRange);
+        float AttackSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackSpeed);
+        float MoveSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.MoveSpeed);
+        float SkillCoolTime = m_Buffs.GetBuffTypeToValue(eBuffType.SkillCoolTime);
+
+        m_BuffUnitData.AP = m_UnitData.AP * AP;
+        m_BuffUnitData.HP = m_UnitData.HP * HP;
+        m_BuffUnitData.AddUnitCount = m_UnitData.AddUnitCount + (int)AddUnitCount;
+        m_BuffUnitData.DamageRate = m_UnitData.DamageRate * DamageRate;
+        m_BuffUnitData.SkillDamageRate = m_UnitData.SkillDamageRate * SkillDamageRate;
+        m_BuffUnitData.AttackRange = m_UnitData.AttackRange * AttackRange;
+        m_BuffUnitData.AttackSpeed = m_UnitData.AttackSpeed * AttackSpeed;
+        m_BuffUnitData.MoveSpeed = m_UnitData.MoveSpeed * MoveSpeed;
+        m_BuffUnitData.SkillCoolTime = SkillCoolTime;
     }
 
     private void SetStats()
@@ -256,6 +291,12 @@ public class Unit : MonoBehaviour
                 {
                     m_Animator.Play("Attack_" + m_UnitData.Weapon.ToString());
                     UnitState = eUnitStateType.Attacking;
+                }
+
+                for (int i = 0; i < SkillList.Count; i++)
+                {
+                    if (SkillList[i].Data.SkillType == eSkillType.Active)
+                        SkillList[i].Active(this, m_Target);
                 }
                 //Attack();
             }
@@ -392,5 +433,10 @@ public class Unit : MonoBehaviour
     public GameObject GetArrow()
     {
         return m_ArrowObjs[(int)m_UnitData.Weapon];
+    }
+
+    public void PlayAnimation(string animation)
+    {
+        m_Animator.Play(animation);
     }
 }

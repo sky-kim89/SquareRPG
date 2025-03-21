@@ -11,10 +11,10 @@ using UnityEngine;
 
 public enum eSkillType
 {
-    평타,
+    Attack,
     Active,
     Active_Buff,
-    패시브
+    Passive
 }
 
 public class SkillData
@@ -23,16 +23,19 @@ public class SkillData
     public string Description = "";
 
     public string Icon = "";
+    public string Animation = "";
 
     public float MaxCoolTime = 0;
 
-    public GameObject ActiveEffect = null;
-    public SkillEffect TargetEffect = null;
+    public int ActiveEffectIndex = -1;
+    public int TargetEffectIndex = -1;
 
-    public eSkillType SkillType = eSkillType.평타;
+    public eSkillType SkillType = eSkillType.Attack;
+    public eWeaponType WeaponType = eWeaponType.Sword;
 
     //데미지, 버프 index
     public float Value = 1;
+    public float Knockback = 1;
 }
 
 public abstract class Skill
@@ -55,11 +58,10 @@ public class ActiveSkill : Skill
     {
         Unit = unit;
         Target = target;
-        SkillEffect skillEffect = ObjectPool.Instance.GetObject<SkillEffect>(Data.TargetEffect.gameObject, target.transform);
-        skillEffect.Init(target, (i) =>
-        {
-            target.Hit(new Damage(unit, Data.Value));
-        });
+        if (Data.Animation != string.Empty)
+            unit.PlayAnimation(Data.Animation);
+        SkillEffect skillEffect = SkillManager.Instance.GetSkillEffect<SkillEffect>(Data.TargetEffectIndex);
+        skillEffect.Init(target, new Damage(unit, Data.Value));
 
         CoolTime = Data.MaxCoolTime;
     }
@@ -72,5 +74,5 @@ public class BuffSkill : Skill
 
 public class PassiveSkill : Skill
 {
-
+    public Buff Buff = new Buff();
 }

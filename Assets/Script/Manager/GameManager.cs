@@ -14,6 +14,7 @@ public class GameManager : Singleton<GameManager>
 
     public float LP_def = 0.25f;
 
+    public List<Buff> Buffs = new List<Buff>();
     // Start is called before the first frame update
     void Start()
     {

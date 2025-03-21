@@ -5,10 +5,11 @@ using UnityEngine;
 public class Damage
 {
     //적 체력 비례 딜 같은거 고민이 필요 할 듯.
-    public Damage(Unit unit, float damageRate)
+    public Damage(Unit unit, float damageRate, float knockback = 1)
     {
         m_Unit = unit;
         DamageRate = damageRate;
+        Knockback = knockback;
     }
 
     private Unit m_Unit = null;

@@ -46,9 +46,9 @@
             data.UnitColors[3] = Table.EyeRColors[index];
             data.UnitColors[4] = Table.EyeLColors[index];
 
-            //data.Skills = new ISkill[2];
-            //data.Skills[0] = SkillTable.GetRandomPassiveSkill();
-            //data.Skills[1] = SkillTable.GetRandomActiveSkill();
+            data.Skills = new Skill[2];
+            data.Skills[0] = SkillManager.Instance.GetRandomPassiveSkill();
+            data.Skills[1] = SkillManager.Instance.GetRandomActiveSkill();
             return data;
         }
 
