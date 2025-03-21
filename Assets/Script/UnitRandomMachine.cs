@@ -22,7 +22,7 @@
             switch(data.Weapon)
             {
                 case eWeaponType.Bow:
-                    data.AttackRange = Random.Range(10f, 12f); ;
+                    data.AttackRange = Random.Range(8f, 10f); ;
                     break;
                 case eWeaponType.Wand:
                     data.AttackRange = Random.Range(6f, 8f); ;

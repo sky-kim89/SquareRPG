@@ -28,10 +28,9 @@ public class SneakAttackSkill : ActiveSkill
         GameObject effect = SkillManager.Instance.GetSkillEffect(Data.ActiveEffectIndex);
         effect.transform.position = unit.transform.position;
 
-        unit.transform.position = target.transform.forward * -1;
+        unit.transform.position = target.transform.position - new Vector3(-1, 0, 0);
 
-        SkillEffect skillEffect = SkillManager.Instance.GetSkillEffect<SkillEffect>(Data.TargetEffectIndex);
-        skillEffect.Init(target, new Damage(unit, Data.Value * unit.SkillDamageRate));
+        GameObject skillEffect = SkillManager.Instance.GetSkillEffect(Data.TargetEffectIndex);
         skillEffect.transform.position = unit.transform.position;
 
         CoolTime = Data.MaxCoolTime;

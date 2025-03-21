@@ -37,35 +37,38 @@ public static class Utility
         {
             for (eBuffType j = 0; j < eBuffType.Last; j++)
             {
-                switch (j)
+                if (buffs[i].BuffList.ContainsKey(j))
                 {
-                    case eBuffType.AP:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.HP:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.AddUnitCount:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.DamageRate:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.SkillDamageRate:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.AttackRange:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.AttackSpeed:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.MoveSpeed:
-                        value += buffs[i].BuffList[j];
-                        break;
-                    case eBuffType.SkillCoolTime:
-                        value *= (1f - buffs[i].BuffList[j]);
-                        break;
+                    switch (j)
+                    {
+                        case eBuffType.AP:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.HP:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.AddUnitCount:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.DamageRate:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.SkillDamageRate:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.AttackRange:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.AttackSpeed:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.MoveSpeed:
+                            value += buffs[i].BuffList[j];
+                            break;
+                        case eBuffType.SkillCoolTime:
+                            value *= (1f - buffs[i].BuffList[j]);
+                            break;
+                    }
                 }
             }
         }

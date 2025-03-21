@@ -171,11 +171,13 @@ public class Unit : MonoBehaviour
     public bool isEnemy = false;
 
     public AttackSkill AttackSkill = null; // 평타
+    [SerializeField]
     public List<Skill> SkillList = new List<Skill>();
 
     public virtual void Init(UnitData data, bool enemy)
     {
         m_UnitData = data;
+        m_Buffs.Clear();
         SetStats();
         InitSkill();
         BuffDataUpdate();
@@ -224,6 +226,7 @@ public class Unit : MonoBehaviour
 
     private void BuffDataUpdate()
     {
+        m_BuffUnitData = new UnitData();
         float AP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AP);
         float HP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.HP);
         float AddUnitCount = m_Buffs.GetBuffTypeToValue(eBuffType.AddUnitCount);
@@ -293,10 +296,14 @@ public class Unit : MonoBehaviour
                     UnitState = eUnitStateType.Attacking;
                 }
 
-                for (int i = 0; i < SkillList.Count; i++)
+                if (UnitState != eUnitStateType.Attacking)
                 {
-                    if (SkillList[i].Data.SkillType == eSkillType.Active)
-                        SkillList[i].Active(this, m_Target);
+                    for (int i = 0; i < SkillList.Count; i++)
+                    {
+                        if (SkillList[i] != null && SkillList[i].Data.SkillType == eSkillType.Active &&
+                            (SkillList[i] as ActiveSkill).isCoolTime)
+                            SkillList[i].Active(this, m_Target);
+                    }
                 }
                 //Attack();
             }
@@ -307,11 +314,13 @@ public class Unit : MonoBehaviour
         }
 
         AttackSkill.CoolTime -= m_BuffUnitData.AttackSpeed * Time.deltaTime;
-        for(int i = 0; i < SkillList.Count; i++)
+        for (int i = 0; i < SkillList.Count; i++)
         {
-            SkillList[i].CoolTime -= Time.deltaTime;
+            if (SkillList[i] != null)
+                SkillList[i].CoolTime -= Time.deltaTime;
         }
     }
+
     //이동
     public virtual void Move(float speed)
     {
@@ -428,6 +437,12 @@ public class Unit : MonoBehaviour
         {
             action();
         }
+    }
+
+    public void AddBuff(List<Buff> buff)
+    {
+        m_Buffs.AddRange(buff);
+        BuffDataUpdate();
     }
 
     public GameObject GetArrow()

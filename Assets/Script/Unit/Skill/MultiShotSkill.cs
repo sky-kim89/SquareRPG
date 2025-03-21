@@ -29,6 +29,9 @@ public class MultiShotSkill : ActiveSkill
         skillEffect.Init(target, new Damage(unit, Data.Value * unit.SkillDamageRate));
         skillEffect.transform.position = unit.transform.position;
 
+
+        skillEffect.transform.rotation = Quaternion.LookRotation(target.transform.position - unit.transform.position);
+
         CoolTime = Data.MaxCoolTime;
     }
 }

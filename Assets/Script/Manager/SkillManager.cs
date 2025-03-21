@@ -35,12 +35,12 @@ public class SkillManager : Singleton<SkillManager>
 
     public T GetSkillEffect<T>(int index)
     {
-        return SkillEffects[index].GetComponent<T>();
+        return ObjectPool.Instance.GetObject<T>(SkillEffects[index], transform);
     }
 
     public GameObject GetSkillEffect(int index)
     {
-        return SkillEffects[index];
+        return ObjectPool.Instance.GetObject(SkillEffects[index], transform);
     }
     public Skill GetRandomActiveSkill()
     {

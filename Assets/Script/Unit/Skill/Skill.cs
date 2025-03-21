@@ -38,6 +38,7 @@ public class SkillData
     public float Knockback = 1;
 }
 
+[System.Serializable]
 public abstract class Skill
 {
     public Unit Unit = null;
@@ -51,6 +52,7 @@ public abstract class Skill
     }
 }
 
+[System.Serializable]
 public class ActiveSkill : Skill
 {
     public bool isCoolTime { get { return 0 > CoolTime; } }

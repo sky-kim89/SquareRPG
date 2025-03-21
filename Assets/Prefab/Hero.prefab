@@ -164,10 +164,12 @@ MonoBehaviour:
     UpGrade: 0
     AddUnitCount: 0
     DamageRate: 1
+    SkillDamageRate: 1
     Exp: 0
     AttackRange: 1.5
     AttackSpeed: 1
     MoveSpeed: 1
+    SkillCoolTime: 1
     UnitColors:
     - {r: 0, g: 0, b: 0, a: 0}
     - {r: 0, g: 0, b: 0, a: 0}
@@ -5594,9 +5596,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2363225798632813628}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.50000006, y: 0.49999997, z: -0.49999997, w: -0.50000006}
-  m_LocalPosition: {x: 0.016000003, y: 0, z: 0}
-  m_LocalScale: {x: 0.03, y: 0.30000004, z: 0.03}
+  m_LocalRotation: {x: -0.7071068, y: -0.000000059604645, z: 0.000000059604645, w: -0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: -0.015999794}
+  m_LocalScale: {x: 0.030000003, y: 0.30000004, z: 0.029999996}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7224787211737487667}
@@ -5677,9 +5679,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3042506514235168522}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.15599956, y: 0, z: 0}
-  m_LocalScale: {x: 0.06, y: 0.06, z: 0.06}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.15599918}
+  m_LocalScale: {x: 0.060000017, y: 0.06, z: 0.060000017}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7224787211737487667}
@@ -15591,7 +15593,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
   Index: 0
-  HitColloders: []
   m_Curve:
     serializedVersion: 2
     m_Curve:
@@ -15616,7 +15617,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_Speed: 1
+  m_Speed: 0.75
   m_MoveType: 0
   m_ArrivalEffect: {fileID: 0}
 --- !u!1 &7516932383892163418
@@ -20544,8 +20545,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8213245462396350428}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000028088027}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20567,7 +20568,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
   Index: 0
-  HitColloders: []
   m_Curve:
     serializedVersion: 2
     m_Curve:
@@ -20601,7 +20601,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_Speed: 1
+  m_Speed: 0.5
   m_MoveType: 0
   m_ArrivalEffect: {fileID: 0}
 --- !u!1001 &2627615129372855461

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using static UnityEngine.GraphicsBuffer;
 
 public enum eSkillEffectMoveType
 {
@@ -36,6 +37,7 @@ public class SkillEffect : MonoBehaviour
     {
         Target = target;
         m_Damage = damage;
+        Index = 0;
         switch (m_MoveType)
         {
             case eSkillEffectMoveType.Arrow:
@@ -59,30 +61,33 @@ public class SkillEffect : MonoBehaviour
     private Vector3 tempPos = Vector3.one;
     public void Update()
     {
-        if (m_Distance != 0)
+        if (m_MoveType == eSkillEffectMoveType.Arrow)
         {
-            float dis = Vector3.Distance(transform.position, Target.transform.position);
-            if (dis >= 0.1f)
+            if (m_Distance != 0)
             {
-                tempPos = transform.position;
-                Vector3 temp = Vector3.Lerp(transform.position, Target.transform.position, m_Time);
-                transform.position = new Vector3(temp.x, m_Curve.Evaluate(1f - dis / m_Distance) * m_Distance * 0.5f, temp.z);
-                if(transform.position != tempPos)
-                    transform.rotation.SetLookRotation((transform.position - tempPos).normalized);
-                //Debug.Log(transform.eulerAngles);
+                float dis = Vector3.Distance(transform.position, Target.transform.position);
+                if (dis >= 0.1f)
+                {
+                    tempPos = transform.position;
+                    Vector3 temp = Vector3.Lerp(transform.position, Target.transform.position, m_Time);
+                    transform.position = new Vector3(temp.x, m_Curve.Evaluate(1f - dis / m_Distance), temp.z);
+                    if (transform.position != tempPos)
+                        transform.rotation = Quaternion.LookRotation(transform.position - tempPos);
+                    //Debug.Log(transform.eulerAngles);
 
-                m_Time += Time.deltaTime * m_Speed;
+                    m_Time += Time.deltaTime * m_Speed;
+                }
+                else
+                {
+                    m_Time = 0;
+                    Active();
+                    ObjectPool.Instance.Restore(gameObject);
+                }
             }
-            else
-            {
-                m_Time = 0;
-                Active();
+
+            if (Target != null && !Target.isCanTarget)
                 ObjectPool.Instance.Restore(gameObject);
-            }
         }
-
-        if(Target != null && !Target.isCanTarget)
-            ObjectPool.Instance.Restore(gameObject);
     }
 
     public void Active()
