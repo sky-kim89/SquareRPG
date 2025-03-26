@@ -35,40 +35,37 @@ public static class Utility
 
         for (int i = 0; i < buffs.Count; i++)
         {
-            for (eBuffType j = 0; j < eBuffType.Last; j++)
+            if (buffs[i].BuffList.ContainsKey(type))
             {
-                if (buffs[i].BuffList.ContainsKey(j))
+                switch (type)
                 {
-                    switch (j)
-                    {
-                        case eBuffType.AP:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.HP:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.AddUnitCount:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.DamageRate:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.SkillDamageRate:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.AttackRange:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.AttackSpeed:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.MoveSpeed:
-                            value += buffs[i].BuffList[j];
-                            break;
-                        case eBuffType.SkillCoolTime:
-                            value *= (1f - buffs[i].BuffList[j]);
-                            break;
-                    }
+                    case eBuffType.AP:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.HP:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.AddUnitCount:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.DamageRate:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.SkillDamageRate:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.AttackRange:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.AttackSpeed:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.MoveSpeed:
+                        value += buffs[i].BuffList[type];
+                        break;
+                    case eBuffType.SkillCoolTime:
+                        value *= (1f - buffs[i].BuffList[type]);
+                        break;
                 }
             }
         }

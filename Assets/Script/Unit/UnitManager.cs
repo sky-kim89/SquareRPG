@@ -117,4 +117,12 @@ public class UnitManager : Singleton<UnitManager>
         }
     }
 
+    public void Restore()
+    {
+        for (int i = 0; i < m_UnitList.Count; i++)
+        {
+            ObjectPool.Instance.Restore(m_UnitList[i].gameObject);
+        }
+    }
+
 }

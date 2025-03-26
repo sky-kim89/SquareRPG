@@ -15,6 +15,8 @@ public class GameManager : Singleton<GameManager>
     public float LP_def = 0.25f;
 
     public List<Buff> Buffs = new List<Buff>();
+
+    public int StageIndex = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,14 +28,23 @@ public class GameManager : Singleton<GameManager>
             MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
             MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
         }
-
-        UnitManager.Instance.InitMyUnit();
-        UnitManager.Instance.InitEnemyUnit(20);
-
-        InGameUI.Instance.UnitViewListUpdate();
         //테이블 관련 로드
         //유져 정보 로드
         //초기 화면 구성
+    }
+
+    public void GameStart()
+    {
+        UnitManager.Instance.Restore();
+        GameStart(StageIndex);
+    }
+
+    private void GameStart(int stageIndex)
+    {
+        UnitManager.Instance.InitMyUnit();
+        UnitManager.Instance.InitEnemyUnit(stageIndex);
+
+        InGameUI.Instance.UnitViewListUpdate();
     }
 
     public UnitData Gacha()

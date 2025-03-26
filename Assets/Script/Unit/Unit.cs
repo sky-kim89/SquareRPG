@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Jobs;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor;
 
 public enum eUnitStateType
 {
@@ -150,7 +151,8 @@ public class Unit : MonoBehaviour
 
     [SerializeField]
     public UnitData UnitData = null;
-    //버프가 생기면 생각해보기
+
+    [SerializeField]
     protected UnitData m_BuffUnitData = null;
 
     public eUnitStateType UnitState = eUnitStateType.None;
@@ -192,6 +194,10 @@ public class Unit : MonoBehaviour
 
         m_UnitColoring.ChangeColor(data.UnitColors);
 
+        m_RootObj.SetActive(true);
+        gameObject.EnableCollider();
+
+        UnitState = eUnitStateType.None;
         isEnemy = enemy;
         m_StateUI.SetEnemy(isEnemy);
         m_StateUI.ReSet();
@@ -238,6 +244,7 @@ public class Unit : MonoBehaviour
         float MoveSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.MoveSpeed);
         float SkillCoolTime = m_Buffs.GetBuffTypeToValue(eBuffType.SkillCoolTime);
 
+        m_BuffUnitData.Name = UnitData.Name;
         m_BuffUnitData.AP = UnitData.AP * AP;
         m_BuffUnitData.HP = UnitData.HP * HP;
         m_BuffUnitData.AddUnitCount = UnitData.AddUnitCount + (int)AddUnitCount;
