@@ -249,7 +249,7 @@ public class Unit : MonoBehaviour
         m_BuffUnitData.SkillCoolTime = SkillCoolTime;
     }
 
-    private void SetStats()
+    private void SetStats(bool resetHP = true)
     {
         float addAP = 1f;
         float addHP = 1f;
@@ -269,8 +269,9 @@ public class Unit : MonoBehaviour
 
         AP = UnitData.AP * GameManager.Instance.Ap * (1f + UnitData.Level * GameManager.Instance.Level) * addAP;
         if (AP < 1) AP = 1;
-        HP = UnitData.HP * GameManager.Instance.Hp * (1f + UnitData.Level * GameManager.Instance.Level) * addHP;
-        MaxHP = HP;
+        MaxHP = UnitData.HP * GameManager.Instance.Hp * (1f + UnitData.Level * GameManager.Instance.Level) * addHP;
+        if (resetHP)
+            HP = MaxHP;
         DamageRate = UnitData.DamageRate;
     }
 
@@ -407,6 +408,8 @@ public class Unit : MonoBehaviour
         UnitState = eUnitStateType.Dieing;
         m_StateUI.SetDisable();
 
+        InGameUI.Instance.UnitViewListUpdate();
+
         DelayAction(0.5f, () =>
         {
             UnitState = eUnitStateType.Die;
@@ -454,5 +457,11 @@ public class Unit : MonoBehaviour
     public void PlayAnimation(string animation)
     {
         m_Animator.Play(animation);
+    }
+
+    public void LevelUp(int level)
+    {
+        UnitData.Level += level;
+        SetStats(false);
     }
 }

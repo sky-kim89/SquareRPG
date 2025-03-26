@@ -29,6 +29,8 @@ public class GameManager : Singleton<GameManager>
 
         UnitManager.Instance.InitMyUnit();
         UnitManager.Instance.InitEnemyUnit(20);
+
+        InGameUI.Instance.UnitViewListUpdate();
         //테이블 관련 로드
         //유져 정보 로드
         //초기 화면 구성
