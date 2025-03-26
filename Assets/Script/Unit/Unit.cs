@@ -149,7 +149,7 @@ public class Unit : MonoBehaviour
     protected List<GameObject> m_ArrowObjs = new List<GameObject>();
 
     [SerializeField]
-    protected UnitData m_UnitData = null;
+    public UnitData UnitData = null;
     //버프가 생기면 생각해보기
     protected UnitData m_BuffUnitData = null;
 
@@ -161,6 +161,7 @@ public class Unit : MonoBehaviour
     [SerializeField]
     protected Unit m_Target = null;
 
+    public int TotalLevel { get { return UnitData.Level + UnitData.AddLevel; } }
     public float AP = 0;
     public float HP = 0;
     public float MaxHP = 0;
@@ -176,7 +177,7 @@ public class Unit : MonoBehaviour
 
     public virtual void Init(UnitData data, bool enemy)
     {
-        m_UnitData = data;
+        UnitData = data;
         m_Buffs.Clear();
         SetStats();
         InitSkill();
@@ -198,7 +199,7 @@ public class Unit : MonoBehaviour
 
     private void InitSkill()
     {
-        switch (m_UnitData.Weapon)
+        switch (UnitData.Weapon)
         {
             case eWeaponType.Bow:
             case eWeaponType.Wand:
@@ -215,7 +216,7 @@ public class Unit : MonoBehaviour
         }
 
         SkillList.Clear();
-        SkillList.AddRange(m_UnitData.Skills);
+        SkillList.AddRange(UnitData.Skills);
 
         for(int i = 0; i < SkillList.Count; i++)
         {
@@ -237,14 +238,14 @@ public class Unit : MonoBehaviour
         float MoveSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.MoveSpeed);
         float SkillCoolTime = m_Buffs.GetBuffTypeToValue(eBuffType.SkillCoolTime);
 
-        m_BuffUnitData.AP = m_UnitData.AP * AP;
-        m_BuffUnitData.HP = m_UnitData.HP * HP;
-        m_BuffUnitData.AddUnitCount = m_UnitData.AddUnitCount + (int)AddUnitCount;
-        m_BuffUnitData.DamageRate = m_UnitData.DamageRate * DamageRate;
-        m_BuffUnitData.SkillDamageRate = m_UnitData.SkillDamageRate * SkillDamageRate;
-        m_BuffUnitData.AttackRange = m_UnitData.AttackRange * AttackRange;
-        m_BuffUnitData.AttackSpeed = m_UnitData.AttackSpeed * AttackSpeed;
-        m_BuffUnitData.MoveSpeed = m_UnitData.MoveSpeed * MoveSpeed;
+        m_BuffUnitData.AP = UnitData.AP * AP;
+        m_BuffUnitData.HP = UnitData.HP * HP;
+        m_BuffUnitData.AddUnitCount = UnitData.AddUnitCount + (int)AddUnitCount;
+        m_BuffUnitData.DamageRate = UnitData.DamageRate * DamageRate;
+        m_BuffUnitData.SkillDamageRate = UnitData.SkillDamageRate * SkillDamageRate;
+        m_BuffUnitData.AttackRange = UnitData.AttackRange * AttackRange;
+        m_BuffUnitData.AttackSpeed = UnitData.AttackSpeed * AttackSpeed;
+        m_BuffUnitData.MoveSpeed = UnitData.MoveSpeed * MoveSpeed;
         m_BuffUnitData.SkillCoolTime = SkillCoolTime;
     }
 
@@ -252,7 +253,7 @@ public class Unit : MonoBehaviour
     {
         float addAP = 1f;
         float addHP = 1f;
-        switch (m_UnitData.Weapon)
+        switch (UnitData.Weapon)
         {
             case eWeaponType.Wand:
                 addAP = 1.1f;
@@ -266,11 +267,11 @@ public class Unit : MonoBehaviour
                 break;
         }
 
-        AP = m_UnitData.AP * GameManager.Instance.Ap * (1f + m_UnitData.Level * GameManager.Instance.Level) * addAP;
+        AP = UnitData.AP * GameManager.Instance.Ap * (1f + UnitData.Level * GameManager.Instance.Level) * addAP;
         if (AP < 1) AP = 1;
-        HP = m_UnitData.HP * GameManager.Instance.Hp * (1f + m_UnitData.Level * GameManager.Instance.Level) * addHP;
+        HP = UnitData.HP * GameManager.Instance.Hp * (1f + UnitData.Level * GameManager.Instance.Level) * addHP;
         MaxHP = HP;
-        DamageRate = m_UnitData.DamageRate;
+        DamageRate = UnitData.DamageRate;
     }
 
     void Update()
@@ -292,7 +293,7 @@ public class Unit : MonoBehaviour
             {
                 if (AttackSkill.isCoolTime && UnitState != eUnitStateType.Attacking)
                 {
-                    m_Animator.Play("Attack_" + m_UnitData.Weapon.ToString());
+                    m_Animator.Play("Attack_" + UnitData.Weapon.ToString());
                     UnitState = eUnitStateType.Attacking;
                 }
 
@@ -447,7 +448,7 @@ public class Unit : MonoBehaviour
 
     public GameObject GetArrow()
     {
-        return m_ArrowObjs[(int)m_UnitData.Weapon];
+        return m_ArrowObjs[(int)UnitData.Weapon];
     }
 
     public void PlayAnimation(string animation)

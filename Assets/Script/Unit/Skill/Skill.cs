@@ -56,6 +56,7 @@ public abstract class Skill
 public class ActiveSkill : Skill
 {
     public bool isCoolTime { get { return 0 > CoolTime; } }
+    public float CoolPercent { get { return Data.MaxCoolTime / CoolTime; } }
     public override void Active(Unit unit, Unit target)
     {
         Unit = unit;

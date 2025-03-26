@@ -116,7 +116,7 @@ public class FitnessUpSkill : PassiveSkill
         Data.Icon = "FitnessUp";
         //Data.ActiveEffectIndex = -1;
         //Data.TargetEffectIndex = 8;
-        Data.Description = "공격력이 {0}%만큼 증가";
+        Data.Description = "최대 체력이 {0}%만큼 증가";
         //Data.MaxCoolTime = 33;
         //Data.Knockback = 0.2f;
         Data.SkillType = eSkillType.Passive;
@@ -125,7 +125,7 @@ public class FitnessUpSkill : PassiveSkill
         Data.WeaponType = eWeaponType.ALL;
 
         Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.AP, 0.1f);
+        Buff.BuffList.Add(eBuffType.HP, 0.1f);
     }
 }
 public class PowerUpSkill : PassiveSkill
@@ -137,7 +137,7 @@ public class PowerUpSkill : PassiveSkill
         Data.Icon = "PowerUp";
         //Data.ActiveEffectIndex = -1;
         //Data.TargetEffectIndex = 8;
-        Data.Description = "최대 체력이 {0}%만큼 증가";
+        Data.Description = "공격력이 {0}%만큼 증가";
         //Data.MaxCoolTime = 33;
         //Data.Knockback = 0.2f;
         Data.SkillType = eSkillType.Passive;
@@ -146,6 +146,6 @@ public class PowerUpSkill : PassiveSkill
         Data.WeaponType = eWeaponType.ALL;
 
         Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.HP, 0.1f);
+        Buff.BuffList.Add(eBuffType.AP, 0.1f);
     }
 }
