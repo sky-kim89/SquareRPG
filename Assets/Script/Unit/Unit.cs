@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using Unity.Jobs;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEditor;
 
 public enum eUnitStateType

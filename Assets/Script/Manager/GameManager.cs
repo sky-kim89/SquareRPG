@@ -28,6 +28,8 @@ public class GameManager : Singleton<GameManager>
             MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
             MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
         }
+
+        GameStart(StageIndex);
         //테이블 관련 로드
         //유져 정보 로드
         //초기 화면 구성
