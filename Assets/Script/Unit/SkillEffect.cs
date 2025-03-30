@@ -81,34 +81,45 @@ public class SkillEffect : MonoBehaviour
                 {
                     m_Time = 0;
                     Active();
-                    ObjectPool.Instance.Restore(gameObject);
                 }
             }
-
-            if (Target != null && !Target.isCanTarget)
-                ObjectPool.Instance.Restore(gameObject);
         }
     }
 
     public void Active()
     {
         if (m_ArrivalEffect != null)
-            ObjectPool.Instance.GetObject(m_ArrivalEffect, Target.transform);
-        Target.Hit(m_Damage);
+        {
+            GameObject obj = ObjectPool.Instance.GetObject(m_ArrivalEffect, SkillManager.Instance.transform);
+            obj.transform.position = Target.transform.position;
+            SkillEffect effect = obj.GetComponent<SkillEffect>();
+            if (effect != null)
+                effect.Init(Target, m_Damage);
+
+            ObjectPool.Instance.Restore(gameObject);
+        }
+        else
+        {
+            if (Target != null && Target.IsDie)
+                ObjectPool.Instance.Restore(gameObject);
+            else
+                Target.Hit(m_Damage);
+        }
+
         Index++;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Unit unit = other.gameObject.GetComponent<Unit>();
-        if (unit != null && unit.isCanTarget && m_Damage != null && m_Damage.Unit.isEnemy != unit.isEnemy)
+        if (unit != null && !unit.IsDie && m_Damage != null && m_Damage.Unit.isEnemy != unit.isEnemy)
             unit.Hit(m_Damage);
     }
 
     private void OnParticleCollision(GameObject other)
     {
         Unit unit = other.gameObject.GetComponent<Unit>();
-        if (unit != null && unit.isCanTarget && m_Damage != null && m_Damage.Unit.isEnemy != unit.isEnemy)
+        if (unit != null && !unit.IsDie && m_Damage != null && m_Damage.Unit.isEnemy != unit.isEnemy)
             unit.Hit(m_Damage);
     }
 }

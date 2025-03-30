@@ -57,7 +57,7 @@ public class HeroSaveData
 }
 
 [System.Serializable]
-public class UnitData
+public class  UnitData
 {
     //public eAttackType AttackType = eAttackType.Normal;
     //public eJobType JobType = eJobType.Warrior;
@@ -118,7 +118,6 @@ public class UnitData
         return data;
     }
 
-
     public HeroSaveData GetSaveData()
     {
         HeroSaveData data = new HeroSaveData();
@@ -128,6 +127,11 @@ public class UnitData
         data.AddUnitCount = AddUnitCount;
 
         return data;
+    }
+
+    public void Restore()
+    {
+        Skills[1].CoolTime = 0;
     }
 }
 //스킬이 없는 기본 유닛 = 부하
@@ -152,8 +156,23 @@ public class Unit : MonoBehaviour
     [SerializeField]
     protected UnitData m_BuffUnitData = null;
 
-    public eUnitStateType UnitState = eUnitStateType.None;
-    public bool isCanTarget { get { return UnitState != eUnitStateType.Die && UnitState != eUnitStateType.Dieing; } }
+    protected Dictionary<eUnitStateType, Action> StateCoolBack = new Dictionary<eUnitStateType, Action>();
+
+    [SerializeField]
+    protected eUnitStateType m_UnitState = eUnitStateType.None;
+    public eUnitStateType UnitState
+    { 
+        get
+        { return m_UnitState; }
+        set
+        {
+            m_UnitState = value;
+            if (StateCoolBack.ContainsKey(value))
+                StateCoolBack[value]();
+
+        }
+    }
+    public bool IsDie { get { return m_UnitState == eUnitStateType.Die || m_UnitState == eUnitStateType.Dieing; } }
 
     protected List<Buff> m_Buffs = new List<Buff>();
 
@@ -178,7 +197,8 @@ public class Unit : MonoBehaviour
     {
         UnitData = data;
         m_Buffs.Clear();
-        SetStats();
+        StateCoolBack.Clear();
+        SetStatus();
         InitSkill();
         BuffDataUpdate();
 
@@ -253,7 +273,7 @@ public class Unit : MonoBehaviour
         m_BuffUnitData.SkillCoolTime = SkillCoolTime;
     }
 
-    private void SetStats(bool resetHP = true)
+    private void SetStatus(bool resetHP = true)
     {
         float addAP = 1f;
         float addHP = 1f;
@@ -281,9 +301,9 @@ public class Unit : MonoBehaviour
 
     void Update()
     {
-        if (!isCanTarget)
+        if (IsDie)
             return;
-
+        
         m_Target = UnitManager.Instance.FindUnit(this);
 
         UnitState = eUnitStateType.None;
@@ -345,6 +365,7 @@ public class Unit : MonoBehaviour
     {
         RaycastHit[] hits;
         hits = Physics.RaycastAll(transform.position, -transform.forward, m_BuffUnitData.AttackRange);
+        Debug.DrawRay(transform.position, -transform.forward * m_BuffUnitData.AttackRange, Color.red, 0.1f);
         //if (Physics.Raycast(transform.position, -transform.forward, out hit, Data.AttackRange))
         if (hits.Length > 0)
         {
@@ -375,7 +396,7 @@ public class Unit : MonoBehaviour
     //피격
     public virtual void Hit(Damage damage)
     {
-        if (UnitState < eUnitStateType.Hiting)
+        if (!IsDie)
         {
             UnitState = eUnitStateType.Hit;
             //ActiveSkillOperate(damage.Unit);
@@ -412,12 +433,10 @@ public class Unit : MonoBehaviour
         UnitState = eUnitStateType.Dieing;
         m_StateUI.SetDisable();
 
-        InGameUI.Instance.UnitViewListUpdate();
-
         DelayAction(0.5f, () =>
         {
-            UnitState = eUnitStateType.Die;
             m_RootObj.SetActive(false);
+            UnitState = eUnitStateType.Die;
         });
         //ActiveSkillOperate(unit);
     }
@@ -466,6 +485,21 @@ public class Unit : MonoBehaviour
     public void LevelUp(int level)
     {
         UnitData.Level += level;
-        SetStats(false);
+        SetStatus(false);
+    }
+
+    public void SetStateCoolBack(eUnitStateType type, Action action)
+    {
+        if (StateCoolBack.ContainsKey(type))
+            StateCoolBack[type] += action;
+        else
+            StateCoolBack.Add(type, action);
+    }
+
+    public void RemoveStateCoolBack(eUnitStateType type, Action action)
+    {
+
+        if (StateCoolBack.ContainsKey(type))
+            StateCoolBack[type] -= action;
     }
 }

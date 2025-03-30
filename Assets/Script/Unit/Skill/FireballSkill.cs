@@ -28,7 +28,7 @@ public class FireballSkill : ActiveSkill
 
         SkillEffect skillEffect = SkillManager.Instance.GetSkillEffect<SkillEffect>(Data.TargetEffectIndex);
         skillEffect.Init(target, new Damage(unit, Data.Value * unit.SkillDamageRate));
-        skillEffect.transform.position = target.transform.position;
+        skillEffect.transform.position = unit.transform.position;
 
         CoolTime = Data.MaxCoolTime;
     }

@@ -13,6 +13,8 @@ public class SkillManager : Singleton<SkillManager>
     private List<System.Type> m_ActiveSkills = new List<System.Type>();
     private List<System.Type> m_PassiveSkills = new List<System.Type>();
 
+
+    private List<GameObject> SkillList = new List<GameObject>();
     public void Awake()
     {
         m_ActiveSkills.Add(typeof(HeavenlySwordSkill));
@@ -35,13 +37,17 @@ public class SkillManager : Singleton<SkillManager>
 
     public T GetSkillEffect<T>(int index)
     {
-        return ObjectPool.Instance.GetObject<T>(SkillEffects[index], transform);
+        GameObject obj = GetSkillEffect(index);
+        return obj.GetComponent<T>();
     }
 
     public GameObject GetSkillEffect(int index)
     {
-        return ObjectPool.Instance.GetObject(SkillEffects[index], transform);
+        GameObject obj = ObjectPool.Instance.GetObject(SkillEffects[index], transform);
+        SkillList.Add(obj);
+        return obj;
     }
+
     public Skill GetRandomActiveSkill()
     {
         return (Skill)Activator.CreateInstance(m_ActiveSkills[UnityEngine.Random.Range(0, m_ActiveSkills.Count)]);
@@ -50,5 +56,13 @@ public class SkillManager : Singleton<SkillManager>
     public Skill GetRandomPassiveSkill()
     {
         return (Skill)Activator.CreateInstance(m_PassiveSkills[UnityEngine.Random.Range(0, m_PassiveSkills.Count)]);
+    }
+
+    public void Restore()
+    {
+        for(int i = 0; i < SkillList.Count; i++)
+        {
+            ObjectPool.Instance.Restore(SkillList[i]);
+        }
     }
 }

@@ -30,19 +30,10 @@ public class UnitView : MonoBehaviour
         {
             gameObject.SetActive(true);
             m_Unit = unit;
-            DieCover.gameObject.SetActive(unit.UnitState == eUnitStateType.Die || unit.UnitState == eUnitStateType.Dieing);
-            Boby.color = m_Unit.UnitData.UnitColors[0];
-            Head.color = m_Unit.UnitData.UnitColors[1];
-            Hair.color = m_Unit.UnitData.UnitColors[2];
-            EyeR.color = m_Unit.UnitData.UnitColors[3];
-            EyeL.color = m_Unit.UnitData.UnitColors[4];
+            UIUpdate();
+            m_Unit.SetStateCoolBack(eUnitStateType.Hit, UIUpdate);
+            m_Unit.SetStateCoolBack(eUnitStateType.Dieing, UIUpdate);
 
-            Level.text = m_Unit.TotalLevel.ToString();
-            HP.fillAmount = m_Unit.HP / m_Unit.MaxHP;
-            UnitCount.text = m_Unit.LifeUnitCount.ToString();
-
-            Skill_1.sprite = InGameUI.Instance.GetSprite(unit.SkillList[1].Data.Name);
-            Skill_2.sprite = InGameUI.Instance.GetSprite(unit.SkillList[0].Data.Name);
         }
         else
         {
@@ -50,10 +41,27 @@ public class UnitView : MonoBehaviour
         }
     }
 
+    public void UIUpdate()
+    {
+        DieCover.gameObject.SetActive(m_Unit.IsDie);
+        Boby.color = m_Unit.UnitData.UnitColors[0];
+        Head.color = m_Unit.UnitData.UnitColors[1];
+        Hair.color = m_Unit.UnitData.UnitColors[2];
+        EyeR.color = m_Unit.UnitData.UnitColors[3];
+        EyeL.color = m_Unit.UnitData.UnitColors[4];
+
+        Level.text = m_Unit.TotalLevel.ToString();
+        HP.fillAmount = m_Unit.HP / m_Unit.MaxHP;
+        UnitCount.text = m_Unit.LifeUnitCount.ToString();
+
+        Skill_1.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[1].Data.Name);
+        Skill_2.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[0].Data.Name);
+    }
+
     public void LevelUp()
     {
-        m_Unit.LevelUp(1);
-        Init(m_Unit);
+        m_Unit.LevelUp(1); 
+        UIUpdate();
     }
 
 

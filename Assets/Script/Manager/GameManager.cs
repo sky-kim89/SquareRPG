@@ -29,6 +29,7 @@ public class GameManager : Singleton<GameManager>
             MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
         }
 
+        UnitManager.Instance.InitMyUnit();
         GameStart(StageIndex);
         //테이블 관련 로드
         //유져 정보 로드
@@ -43,14 +44,34 @@ public class GameManager : Singleton<GameManager>
 
     private void GameStart(int stageIndex)
     {
-        UnitManager.Instance.InitMyUnit();
+        UnitManager.Instance.RegisterMyUnit();
         UnitManager.Instance.InitEnemyUnit(stageIndex);
 
-        InGameUI.Instance.UnitViewListUpdate();
+        InGameUI.Instance.InitUnitView();
+    }
+
+    //스테이지 승리
+    public void GameWin()
+    {
+        UnitManager.Instance.Restore();
+        StageIndex++;
+        GameStart(StageIndex);
+        //GameStart(StageIndex);
+    }
+
+    //스테이지 패배
+    public void GameOver()
+    {
+        UnitManager.Instance.Restore();
     }
 
     public UnitData Gacha()
     {
         return UnitRandomMachine.NewUnitData();
+    }
+
+    public void X2()
+    {
+        Time.timeScale = Time.timeScale == 1 ? 2 : 1;
     }
 }
