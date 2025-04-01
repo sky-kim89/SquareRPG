@@ -83,6 +83,9 @@ public class SkillEffect : MonoBehaviour
                     Active();
                 }
             }
+
+            if (Target != null && Target.IsDie)
+                ObjectPool.Instance.Restore(gameObject);
         }
     }
 
@@ -100,10 +103,7 @@ public class SkillEffect : MonoBehaviour
         }
         else
         {
-            if (Target != null && Target.IsDie)
-                ObjectPool.Instance.Restore(gameObject);
-            else
-                Target.Hit(m_Damage);
+            Target.Hit(m_Damage);
         }
 
         Index++;

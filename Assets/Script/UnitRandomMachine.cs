@@ -46,9 +46,11 @@
             data.UnitColors[3] = Table.EyeRColors[index];
             data.UnitColors[4] = Table.EyeLColors[index];
 
-            data.Skills = new Skill[2];
-            data.Skills[0] = SkillManager.Instance.GetRandomPassiveSkill();
-            data.Skills[1] = SkillManager.Instance.GetRandomActiveSkill();
+            data.Skills = new Skill[4];
+            data.Skills[0] = SkillManager.Instance.GetRandomActiveSkill();
+            data.Skills[1] = SkillManager.Instance.GetRandomPassiveSkill();
+            data.Skills[2] = SkillManager.Instance.GetRandomPassiveSkill();
+            data.Skills[3] = SkillManager.Instance.GetRandomPassiveSkill();
             return data;
         }
 
@@ -64,7 +66,7 @@
 
         static public UnitData NewUnitData()
         {
-            Random.InitState(Random.Range(int.MinValue, int.MaxValue));
+            Random.InitState(Random.Range(0, (int)(System.DateTime.Now.Ticks)));
 
             int index = Random.Range(0, Table.NameTables.Length);
             index = index - index % 3;

@@ -11,12 +11,12 @@ public class MoveSpeedSkill : PassiveSkill
         Data.Icon = "MoveSpeed";
         //Data.ActiveEffectIndex = -1;
         //Data.TargetEffectIndex = 8;
-        Data.Description = "이동속도가 {0}만큼 증가";
+        Data.Description = "이동속도가 {0}%만큼 증가";
         //Data.MaxCoolTime = 33;
         //Data.Knockback = 0.2f;
         Data.SkillType = eSkillType.Passive;
         //Data.Animation = "Skill";
-        //Data.Value = 0.1f;
+        Data.Value = 0.1f;
         Data.WeaponType = eWeaponType.ALL;
 
         Buff = new Buff();
@@ -32,12 +32,12 @@ public class AttackRangeSkill : PassiveSkill
         Data.Icon = "AttackRange";
         //Data.ActiveEffectIndex = -1;
         //Data.TargetEffectIndex = 8;
-        Data.Description = "공격 사정거리가 {0}만큼 증가";
+        Data.Description = "공격 사정거리가 {0}%만큼 증가";
         //Data.MaxCoolTime = 33;
         //Data.Knockback = 0.2f;
         Data.SkillType = eSkillType.Passive;
         //Data.Animation = "Skill";
-        //Data.Value = 0.1f;
+        Data.Value = 0.1f;
         Data.WeaponType = eWeaponType.ALL;
 
         Buff = new Buff();
@@ -53,12 +53,12 @@ public class DamageRateSkill : PassiveSkill
         Data.Icon = "DamageRate";
         //Data.ActiveEffectIndex = -1;
         //Data.TargetEffectIndex = 8;
-        Data.Description = "데미지가가 {0}만큼 증가";
+        Data.Description = "데미지가가 {0}%만큼 증가";
         //Data.MaxCoolTime = 33;
         //Data.Knockback = 0.2f;
         Data.SkillType = eSkillType.Passive;
         //Data.Animation = "Skill";
-        //Data.Value = 0.1f;
+        Data.Value = 0.1f;
         Data.WeaponType = eWeaponType.ALL;
 
         Buff = new Buff();
@@ -74,12 +74,12 @@ public class SkillDamageRateSkill : PassiveSkill
         Data.Icon = "SkillDamageRate";
         //Data.ActiveEffectIndex = -1;
         //Data.TargetEffectIndex = 8;
-        Data.Description = "스킬 데미지가가 {0}만큼 증가";
+        Data.Description = "스킬 데미지가가 {0}%만큼 증가";
         //Data.MaxCoolTime = 33;
         //Data.Knockback = 0.2f;
         Data.SkillType = eSkillType.Passive;
         //Data.Animation = "Skill";
-        //Data.Value = 0.1f;
+        Data.Value = 0.1f;
         Data.WeaponType = eWeaponType.ALL;
 
         Buff = new Buff();
@@ -100,7 +100,7 @@ public class UnitAddSkill : PassiveSkill
         //Data.Knockback = 0.2f;
         Data.SkillType = eSkillType.Passive;
         //Data.Animation = "Skill";
-        //Data.Value = 0.1f;
+        Data.Value = 0.01f;
         Data.WeaponType = eWeaponType.ALL;
 
         Buff = new Buff();

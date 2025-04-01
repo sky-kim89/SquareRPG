@@ -11,7 +11,7 @@ public class DaggerThrowSkill : ActiveSkill
         Data.Icon = "DaggerThrow";
         Data.ActiveEffectIndex = -1;
         Data.TargetEffectIndex = 2;
-        Data.Description = "적 히어로에게 2개의 단검을 던진져 {0}%의 피해를 준다.";
+        Data.Description = "적 히어로에게 2개의 단검을 던진져 {0}의 피해를 준다.";
         Data.MaxCoolTime = 6;
         Data.Knockback = 1;
         Data.SkillType = eSkillType.Active;

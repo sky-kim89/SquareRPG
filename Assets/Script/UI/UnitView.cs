@@ -6,21 +6,36 @@ using UnityEngine.UI;
 
 public class UnitView : MonoBehaviour
 {
-    public Image Boby = null;
-    public Image Head = null;
-    public Image Hair = null;
-    public Image EyeL = null;
-    public Image EyeR = null;
+    [SerializeField]
+    private Image m_Boby = null;
+    [SerializeField]
+    private Image m_Head = null;
+    [SerializeField]
+    private Image m_Hair = null;
+    [SerializeField]
+    private Image m_EyeL = null;
+    [SerializeField]
+    private Image m_EyeR = null;
 
-    public Text Level = null;
-    public Text UnitCount = null;
-    public Image HP = null;
-    public Image Cool = null;
+    [SerializeField]
+    private Image m_Jop = null;
 
-    public Image Skill_1 = null;
-    public Image Skill_2 = null;
+    [SerializeField]
+    private Text m_Level = null;
+    [SerializeField]
+    private Text m_UnitCount = null;
+    [SerializeField]
+    private Image m_HP = null;
+    [SerializeField]
+    private Image m_Cool = null;
 
-    public Image DieCover = null;
+    [SerializeField]
+    private Image m_Skill_1 = null;
+    [SerializeField]
+    private Image m_Skill_2 = null;
+
+    [SerializeField]
+    private Image m_DieCover = null;
 
     private HeroUnit m_Unit = null;
 
@@ -43,19 +58,21 @@ public class UnitView : MonoBehaviour
 
     public void UIUpdate()
     {
-        DieCover.gameObject.SetActive(m_Unit.IsDie);
-        Boby.color = m_Unit.UnitData.UnitColors[0];
-        Head.color = m_Unit.UnitData.UnitColors[1];
-        Hair.color = m_Unit.UnitData.UnitColors[2];
-        EyeR.color = m_Unit.UnitData.UnitColors[3];
-        EyeL.color = m_Unit.UnitData.UnitColors[4];
+        m_DieCover.gameObject.SetActive(m_Unit.IsDie);
+        m_Boby.color = m_Unit.UnitData.UnitColors[0];
+        m_Head.color = m_Unit.UnitData.UnitColors[1];
+        m_Hair.color = m_Unit.UnitData.UnitColors[2];
+        m_EyeR.color = m_Unit.UnitData.UnitColors[3];
+        m_EyeL.color = m_Unit.UnitData.UnitColors[4];
 
-        Level.text = m_Unit.TotalLevel.ToString();
-        HP.fillAmount = m_Unit.HP / m_Unit.MaxHP;
-        UnitCount.text = m_Unit.LifeUnitCount.ToString();
+        m_Level.text = m_Unit.TotalLevel.ToString();
+        m_HP.fillAmount = m_Unit.HP / m_Unit.MaxHP;
+        m_UnitCount.text = m_Unit.LifeUnitCount.ToString();
 
-        Skill_1.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[1].Data.Name);
-        Skill_2.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[0].Data.Name);
+        m_Jop.sprite = InGameUI.Instance.GetSprite(m_Unit.UnitData.Weapon.ToString());
+
+        m_Skill_1.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[0].Data.Name);
+        m_Skill_2.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[1].Data.Name);
     }
 
     public void LevelUp()
@@ -64,12 +81,21 @@ public class UnitView : MonoBehaviour
         UIUpdate();
     }
 
+    public void OnClickUnitInfoOpenButton()
+    {
+        UnitInfo_Window win = UnitInfo_Window.Open(m_Unit);
+        win.CloseCall = () =>
+        {
+            UIUpdate();
+        };
+    }
+
 
     private void Update()
     {
         if (m_Unit != null)
         {
-            Cool.fillAmount = (m_Unit.SkillList[1] as ActiveSkill).CoolPercent;
+            m_Cool.fillAmount = (m_Unit.SkillList[0] as ActiveSkill).CoolPercent;
         }
     }
 }

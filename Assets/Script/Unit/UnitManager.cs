@@ -61,6 +61,7 @@ public class UnitManager : Singleton<UnitManager>
     
     public void InitMyUnit()
     {
+        MyUnitData.Clear();
         for (int i = 0; i < MyInfoManager.Instance.HeroSaveDatas.Count; i++)
         {
             UnitData data = UnitRandomMachine.GetUnitData(MyInfoManager.Instance.HeroSaveDatas[i]);

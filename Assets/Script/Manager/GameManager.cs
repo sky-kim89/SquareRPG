@@ -65,13 +65,30 @@ public class GameManager : Singleton<GameManager>
         UnitManager.Instance.Restore();
     }
 
+    #region 치트성 함수
     public UnitData Gacha()
     {
         return UnitRandomMachine.NewUnitData();
+    }
+
+    public void ChangeUnit()
+    {
+        int index = Random.Range(0, Table.NameTables.Length);
+        MyInfoManager.Instance.HeroSaveDatas.Clear();
+
+        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
+        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
+        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
+        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
+        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
+
+        UnitManager.Instance.InitMyUnit();
+        GameStart();
     }
 
     public void X2()
     {
         Time.timeScale = Time.timeScale == 1 ? 2 : 1;
     }
+    #endregion
 }

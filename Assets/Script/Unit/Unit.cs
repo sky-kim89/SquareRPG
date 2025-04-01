@@ -131,7 +131,7 @@ public class  UnitData
 
     public void Restore()
     {
-        Skills[1].CoolTime = 0;
+        Skills[0].CoolTime = 0;
     }
 }
 //스킬이 없는 기본 유닛 = 부하
@@ -154,7 +154,7 @@ public class Unit : MonoBehaviour
     public UnitData UnitData = null;
 
     [SerializeField]
-    protected UnitData m_BuffUnitData = null;
+    public UnitData m_BuffUnitData = null;
 
     protected Dictionary<eUnitStateType, Action> StateCoolBack = new Dictionary<eUnitStateType, Action>();
 
@@ -486,6 +486,12 @@ public class Unit : MonoBehaviour
     {
         UnitData.Level += level;
         SetStatus(false);
+    }
+    public void AddUnit(int count)
+    {
+        UnitData.AddUnitCount += count;
+        SetStatus(false);
+        BuffDataUpdate();
     }
 
     public void SetStateCoolBack(eUnitStateType type, Action action)
