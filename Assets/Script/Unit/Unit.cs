@@ -166,9 +166,12 @@ public class Unit : MonoBehaviour
         { return m_UnitState; }
         set
         {
-            m_UnitState = value;
-            if (StateCoolBack.ContainsKey(value))
-                StateCoolBack[value]();
+            if (m_UnitState != value)
+            {
+                m_UnitState = value;
+                if (StateCoolBack.ContainsKey(value))
+                    StateCoolBack[value]();
+            }
 
         }
     }
@@ -303,7 +306,7 @@ public class Unit : MonoBehaviour
     {
         if (IsDie)
             return;
-        
+
         m_Target = UnitManager.Instance.FindUnit(this);
 
         UnitState = eUnitStateType.None;
@@ -352,8 +355,12 @@ public class Unit : MonoBehaviour
     {
         if (UnitState < eUnitStateType.Hiting && UnitState != eUnitStateType.Attacking && UnitState != eUnitStateType.Skilling)
         {
-            m_Animator.Play("Move");
-            UnitState = eUnitStateType.Move;
+            if (UnitState != eUnitStateType.Move)
+            {
+                m_Animator.Play("Move");
+                UnitState = eUnitStateType.Move;
+            }
+
             Quaternion temp = Quaternion.LookRotation(transform.position - m_Target.transform.position);
             transform.rotation = Quaternion.Euler(0, temp.eulerAngles.y, 0);
 

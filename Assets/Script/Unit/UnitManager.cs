@@ -1,7 +1,9 @@
 using MyProjeckt;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public enum eFindUnitType
 {
@@ -32,25 +34,19 @@ public class UnitManager : Singleton<UnitManager>
     public Unit FindUnit(Unit unit, eFindUnitType findType = eFindUnitType.Range)
     {
         Unit target = null;
-
         switch (findType)
         {
             case eFindUnitType.Range:
                 {
-                    float dir = 100;
-                    for (int i = 0; i < m_UnitList.Count; i++)
+                    HeroUnit targetHero = FindHeroToRange(unit, unit.isEnemy ? MyHeroUniy : EnemyHeroUniy);
+                    target = targetHero;
+                    if (targetHero != null && targetHero.LifeUnitCount > 0)
                     {
-                        if (m_UnitList[i] != unit && m_UnitList[i].isEnemy != unit.isEnemy &&
-                            !m_UnitList[i].IsDie)
-                        {
-                            float temp = Vector3.Distance(m_UnitList[i].transform.position, unit.transform.position);
-                            if (dir > temp)
-                            {
-                                target = m_UnitList[i];
-                                dir = temp;
-                            }
-                        }
+                        Unit temp = FindUnitToRange(unit, targetHero.Units, targetHero);
+                        if(temp != null)
+                            target = temp;
                     }
+                    
 
                     break;
                 }
@@ -58,7 +54,55 @@ public class UnitManager : Singleton<UnitManager>
 
         return target;
     }
-    
+
+    public HeroUnit FindHeroToRange(Unit unit, List<HeroUnit> unitList)
+    {
+        HeroUnit target = null;
+        float dir = 100;
+        for (int i = 0; i < unitList.Count; i++)
+        {
+            if (unitList[i] != unit && unitList[i].isEnemy != unit.isEnemy &&
+                !unitList[i].IsAllDie)
+            {
+                //Vector3.SqrMagnitude(unitList[i].transform.position - unit.transform.position)
+                float temp = Vector3.Distance(unitList[i].transform.position, unit.transform.position);
+                if (dir > temp)
+                {
+                    target = unitList[i];
+                    dir = temp;
+                }
+            }
+        }
+
+        return target;
+    }
+
+    public Unit FindUnitToRange(Unit unit, List<Unit> unitList, HeroUnit hero = null)
+    {
+        Unit target = null;
+        float dir = 100;
+        for (int i = 0; i < unitList.Count; i++)
+        {
+            if (unitList[i] != unit && unitList[i].isEnemy != unit.isEnemy &&
+                !unitList[i].IsDie)
+            {
+                //Vector3.SqrMagnitude(unitList[i].transform.position - unit.transform.position)
+                float temp = Vector3.Distance(unitList[i].transform.position, unit.transform.position);
+                if (dir > temp)
+                {
+                    target = unitList[i];
+                    dir = temp;
+                }
+            }
+        }
+
+        if (hero != null && !hero.IsDie && dir > Vector3.Distance(hero.transform.position, unit.transform.position))
+            target = hero;
+
+        return target;
+    }
+
+
     public void InitMyUnit()
     {
         MyUnitData.Clear();
@@ -91,6 +135,8 @@ public class UnitManager : Singleton<UnitManager>
 
     public void InitEnemyUnit(int stage)
     {
+        EnemyHeroUniy.Clear();
+
         int temp = stage * stage;
         int addCount = stage / 5;
         if (addCount > 10)
@@ -144,8 +190,9 @@ public class UnitManager : Singleton<UnitManager>
     }
 
     public void RegisterMyUnit()
-    { 
-        for(int i = 0; i < MyUnitData.Count; i++)
+    {
+        MyHeroUniy.Clear();
+        for (int i = 0; i < MyUnitData.Count; i++)
         {
             HeroUnit hero = CreateHero(MyUnitData[i], i);
             MyHeroUniy.Add(hero);

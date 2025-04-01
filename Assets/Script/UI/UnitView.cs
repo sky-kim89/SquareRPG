@@ -48,6 +48,10 @@ public class UnitView : MonoBehaviour
             UIUpdate();
             m_Unit.SetStateCoolBack(eUnitStateType.Hit, UIUpdate);
             m_Unit.SetStateCoolBack(eUnitStateType.Dieing, UIUpdate);
+            for(int i = 0; i < m_Unit.Units.Count; i++)
+            {
+                m_Unit.Units[i].SetStateCoolBack(eUnitStateType.Dieing, UIUpdate);
+            }
 
         }
         else

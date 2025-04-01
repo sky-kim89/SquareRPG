@@ -88,7 +88,7 @@ public class GameManager : Singleton<GameManager>
 
     public void X2()
     {
-        Time.timeScale = Time.timeScale == 1 ? 2 : 1;
+        Time.timeScale = Time.timeScale == 1 ? 10 : 1;
     }
     #endregion
 }

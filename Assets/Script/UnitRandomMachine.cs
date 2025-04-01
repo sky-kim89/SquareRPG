@@ -69,7 +69,7 @@
             Random.InitState(Random.Range(0, (int)(System.DateTime.Now.Ticks)));
 
             int index = Random.Range(0, Table.NameTables.Length);
-            index = index - index % 3;
+            index = index - index % 3 + 1;
             string name = Table.NameTables[index];
 
             return GetUnitData(name);
