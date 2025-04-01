@@ -100,7 +100,7 @@ public class UnitInfo_Window : BackBaseWindow
     }
     public void OnClickAddUnitButton()
     {
-        m_Unit.AddUnit(1);
+        m_Unit.AddUnit(100);
         OnInit(m_Unit);
     }
 

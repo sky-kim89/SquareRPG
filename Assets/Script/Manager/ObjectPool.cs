@@ -9,6 +9,9 @@ public sealed class ObjectPool : Singleton<ObjectPool>
     //***********
     //Variable
     //***********
+
+    [SerializeField]
+    private Material Material = null;
     private Dictionary<GameObject, List<GameObject>> objectPools = new Dictionary<GameObject, List<GameObject>>();
     [SerializeField]
     private Dictionary<Color, Material> materials = new Dictionary<Color, Material>();
@@ -20,7 +23,7 @@ public sealed class ObjectPool : Singleton<ObjectPool>
     {
         if (!materials.ContainsKey(color))
         {
-            Material mat = new Material(Shader.Find("Specular"));
+            Material mat = new Material(Material);
             mat.color = color;
             materials.Add(color, mat);
         }

@@ -80,7 +80,7 @@ public class UnitManager : Singleton<UnitManager>
         {
             Unit unit = ObjectPool.Instance.GetObject<Unit>(m_UnitPrefab, transform);
             //unit.isEnemy = false;
-            unit.transform.position = hero.transform.position + new Vector3(0.6f * (1 + (int)(j * 0.1f)), 0, (j * 0.3f) * (j % 2 == 0 ? 1 : -1));
+            unit.transform.position = hero.transform.position + new Vector3(0.8f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.4f) * (j % 2 == 0 ? 1 : -1));
             unit.Init(data.HalfData(), false);
             unit.SetStateCoolBack(eUnitStateType.Die, EndGameCheck);
             hero.Units.Add(unit);
@@ -111,7 +111,7 @@ public class UnitManager : Singleton<UnitManager>
             {
                 Unit unit = ObjectPool.Instance.GetObject<Unit>(m_UnitPrefab, transform);
                 //unit.isEnemy = true;
-                unit.transform.position = hero.transform.position + new Vector3(-0.6f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.3f) * (j % 2 == 0 ? 1 : -1));
+                unit.transform.position = hero.transform.position + new Vector3(-0.8f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.4f) * (j % 2 == 0 ? 1 : -1));
                 unit.Init(data.HalfData(), true);
                 unit.SetStateCoolBack(eUnitStateType.Die, EndGameCheck);
                 hero.Units.Add(unit);
@@ -121,6 +121,25 @@ public class UnitManager : Singleton<UnitManager>
 
             m_UnitList.Add(hero);
             m_UnitList.AddRange(hero.Units);
+        }
+        
+        int layerMask = LayerMask.NameToLayer("Enemy");
+        for (int i = 0; i < EnemyHeroUniy.Count; i++)
+        {
+            ChangeLayerRecursively(EnemyHeroUniy[i].gameObject, layerMask);
+            for(int j = 0; j < EnemyHeroUniy[i].Units.Count; j++)
+            {
+                ChangeLayerRecursively(EnemyHeroUniy[i].Units[j].gameObject, layerMask);
+            }
+        }
+    }
+    private void ChangeLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            ChangeLayerRecursively(child.gameObject, layer);
         }
     }
 
@@ -133,6 +152,16 @@ public class UnitManager : Singleton<UnitManager>
 
             m_UnitList.Add(hero);
             m_UnitList.AddRange(hero.Units);
+        }
+
+        int layerMask = LayerMask.NameToLayer("Unit");
+        for (int i = 0; i < MyHeroUniy.Count; i++)
+        {
+            ChangeLayerRecursively(MyHeroUniy[i].gameObject, layerMask);
+            for (int j = 0; j < MyHeroUniy[i].Units.Count; j++)
+            {
+                ChangeLayerRecursively(MyHeroUniy[i].Units[j].gameObject, layerMask);
+            }
         }
     }
 

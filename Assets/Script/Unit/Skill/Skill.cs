@@ -74,8 +74,3 @@ public class BuffSkill : Skill
 {
 
 }
-
-public class PassiveSkill : Skill
-{
-    public Buff Buff = new Buff();
-}

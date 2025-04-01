@@ -55,7 +55,7 @@ public class SkillManager : Singleton<SkillManager>
 
     public Skill GetRandomPassiveSkill()
     {
-        return (Skill)Activator.CreateInstance(m_PassiveSkills[UnityEngine.Random.Range(0, m_PassiveSkills.Count)]);
+        return (Skill)Activator.CreateInstance(m_PassiveSkills[UnityEngine.Random.Range(0, m_PassiveSkills.Count)], (eGradeType)UnityEngine.Random.Range(1, (int)eGradeType.Last));
     }
 
     public void Restore()

@@ -364,8 +364,14 @@ public class Unit : MonoBehaviour
     protected virtual bool InByUnitToAttackRange()
     {
         RaycastHit[] hits;
-        hits = Physics.RaycastAll(transform.position, -transform.forward, m_BuffUnitData.AttackRange);
-        Debug.DrawRay(transform.position, -transform.forward * m_BuffUnitData.AttackRange, Color.red, 0.1f);
+        int layerMask = 0;
+        if(isEnemy)
+            layerMask = LayerMask.GetMask("Unit", "Obstacle");
+        else
+            layerMask = LayerMask.GetMask("Enemy", "Obstacle");
+
+        hits = Physics.RaycastAll(transform.position, -transform.forward, m_BuffUnitData.AttackRange, layerMask);
+        //Debug.DrawRay(transform.position, -transform.forward * m_BuffUnitData.AttackRange, Color.red, 0.1f);
         //if (Physics.Raycast(transform.position, -transform.forward, out hit, Data.AttackRange))
         if (hits.Length > 0)
         {
