@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 public enum WindowIds
 {
     UnitInfo_Window,
+    CardSelect_Window,
+    GameOver_Window,
 }
 
 public class WindowManager : MonoBehaviour
@@ -177,7 +179,8 @@ public class WindowManager : MonoBehaviour
     public void Close(WindowIds id)
     {
         BaseWindow win = GetWindow(id);
-        Close(win);
+        win.Close();
+        //Close(win);
     }
 
     public void Close(BaseWindow win)

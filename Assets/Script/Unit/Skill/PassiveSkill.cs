@@ -6,7 +6,7 @@ using System;
 public class PassiveSkill : Skill
 {
     public eGradeType Grade = eGradeType.Common;
-    public Buff Buff = new Buff();
+    public BuffData Buff = new BuffData();
 
     public PassiveSkill(eGradeType grade)
     {
@@ -31,8 +31,8 @@ public class MoveSpeedSkill : PassiveSkill
         Data.Value = 0.1f * ((float)Grade * 0.5f);
         Data.WeaponType = eWeaponType.ALL;
 
-        Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.MoveSpeed, Data.Value);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.MoveSpeed, Data.Value));
     }
 }
 public class AttackRangeSkill : PassiveSkill
@@ -52,8 +52,8 @@ public class AttackRangeSkill : PassiveSkill
         Data.Value = 0.1f * ((float)Grade * 0.5f);
         Data.WeaponType = eWeaponType.ALL;
 
-        Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.AttackRange, Data.Value);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.AttackRange, Data.Value));
     }
 }
 public class DamageRateSkill : PassiveSkill
@@ -73,8 +73,8 @@ public class DamageRateSkill : PassiveSkill
         Data.Value = 0.1f * ((float)Grade * 0.5f);
         Data.WeaponType = eWeaponType.ALL;
 
-        Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.DamageRate, Data.Value);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.DamageRate, Data.Value));
     }
 }
 public class SkillDamageRateSkill : PassiveSkill
@@ -94,8 +94,8 @@ public class SkillDamageRateSkill : PassiveSkill
         Data.Value = 0.2f * ((float)Grade * 0.5f);
         Data.WeaponType = eWeaponType.ALL;
 
-        Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.SkillDamageRate, Data.Value);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.SkillDamageRate, Data.Value));
     }
 }
 public class UnitAddSkill : PassiveSkill
@@ -116,8 +116,8 @@ public class UnitAddSkill : PassiveSkill
         Data.Value = 0.01f * (float)Grade;
         Data.WeaponType = eWeaponType.ALL;
 
-        Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.AddUnitCount, Data.Value * 100);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.AddUnitCount, Data.Value * 100));
     }
 }
 public class FitnessUpSkill : PassiveSkill
@@ -137,8 +137,8 @@ public class FitnessUpSkill : PassiveSkill
         Data.Value = 0.1f * ((float)Grade * 0.5f);
         Data.WeaponType = eWeaponType.ALL;
 
-        Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.HP, Data.Value);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.HP, Data.Value));
     }
 }
 public class PowerUpSkill : PassiveSkill
@@ -158,7 +158,7 @@ public class PowerUpSkill : PassiveSkill
         Data.Value = 0.1f * ((float) Grade * 0.5f);
         Data.WeaponType = eWeaponType.ALL;
 
-        Buff = new Buff();
-        Buff.BuffList.Add(eBuffType.AP, Data.Value);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.AP, Data.Value));
     }
 }

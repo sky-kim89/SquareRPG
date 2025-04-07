@@ -29,42 +29,43 @@ public static class Utility
         }
     }
 
-    public static float GetBuffTypeToValue(this List<Buff> buffs, eBuffType type)
+    public static float GetBuffTypeToValue(this List<BuffData> buffs, eBuffType type, eTargetType unitType)
     {
         float value = 0;
 
         for (int i = 0; i < buffs.Count; i++)
         {
-            if (buffs[i].BuffList.ContainsKey(type))
+            Buff buff = buffs[i].BuffList.Find(temp => temp.eBuffType == type && temp.eTargetType == unitType );
+            if (buff != null)
             {
                 switch (type)
                 {
                     case eBuffType.AP:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.HP:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.AddUnitCount:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.DamageRate:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.SkillDamageRate:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.AttackRange:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.AttackSpeed:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.MoveSpeed:
-                        value += buffs[i].BuffList[type];
+                        value += buff.Value;
                         break;
                     case eBuffType.SkillCoolTime:
-                        value *= (1f - buffs[i].BuffList[type]);
+                        value *= (1f - buff.Value);
                         break;
                 }
             }

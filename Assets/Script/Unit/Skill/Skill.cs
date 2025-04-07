@@ -55,6 +55,8 @@ public abstract class Skill
 [System.Serializable]
 public class ActiveSkill : Skill
 {
+    //스킬 발동 타이밍
+    public eUnitStateType UnitState = eUnitStateType.Attack;
     public bool isCoolTime { get { return 0 > CoolTime; } }
     public float CoolPercent { get { return CoolTime / Data.MaxCoolTime; } }
     public override void Active(Unit unit, Unit target)

@@ -69,7 +69,6 @@ public abstract class BaseWindow : MonoBehaviour
         {
             //고민 필요
             Animator.Play("Close");
-            WindowManager.Instance.Close(this);
         }
     }
 

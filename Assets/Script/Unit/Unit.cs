@@ -43,6 +43,14 @@ public enum eWeaponType
     ALL
 }
 
+public enum eTargetType
+{
+    Hero,
+    Minion,
+    Boss,
+
+    All
+}
 
 public class HeroSaveData
 {
@@ -88,6 +96,7 @@ public class  UnitData
     public float AttackSpeed = 1.0f;
     public float MoveSpeed = 1;
     public float SkillCoolTime = 1;
+    public float DamageReduction = 0;
 
     public Skill[] Skills = new Skill[2];
     public Color[] UnitColors = new Color[5];
@@ -175,9 +184,11 @@ public class Unit : MonoBehaviour
 
         }
     }
+
+    public eTargetType UnitType = eTargetType.Minion;
     public bool IsDie { get { return m_UnitState == eUnitStateType.Die || m_UnitState == eUnitStateType.Dieing; } }
 
-    protected List<Buff> m_Buffs = new List<Buff>();
+    protected List<BuffData> m_Buffs = new List<BuffData>();
 
     [SerializeField]
     protected Unit m_Target = null;
@@ -198,7 +209,10 @@ public class Unit : MonoBehaviour
 
     public virtual void Init(UnitData data, bool enemy)
     {
-        UnitData = data;
+        UnitData = data; 
+        UnitType = eTargetType.Minion;
+        m_UnitState = eUnitStateType.None;
+        UnitState = eUnitStateType.Start;
         m_Buffs.Clear();
         StateCoolBack.Clear();
         SetStatus();
@@ -217,10 +231,17 @@ public class Unit : MonoBehaviour
         m_RootObj.SetActive(true);
         gameObject.EnableCollider();
 
-        UnitState = eUnitStateType.None;
         isEnemy = enemy;
         m_StateUI.SetEnemy(isEnemy);
         m_StateUI.ReSet();
+
+        float delay = UnityEngine.Random.Range(0.5f, 0.7f);
+        InvokeRepeating("FindTarget", 0, delay);
+    }
+
+    private void FindTarget()
+    {
+        m_Target = UnitManager.Instance.FindUnit(this);
     }
 
     private void InitSkill()
@@ -254,16 +275,17 @@ public class Unit : MonoBehaviour
     private void BuffDataUpdate()
     {
         m_BuffUnitData = new UnitData();
-        float AP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AP);
-        float HP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.HP);
-        float AddUnitCount = m_Buffs.GetBuffTypeToValue(eBuffType.AddUnitCount);
-        float DamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.DamageRate);
-        float SkillDamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.SkillDamageRate);
-        float AttackRange = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackRange);
-        float AttackSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackSpeed);
-        float MoveSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.MoveSpeed);
-        float SkillCoolTime = m_Buffs.GetBuffTypeToValue(eBuffType.SkillCoolTime);
-
+        float AP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AP, UnitType);
+        float HP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.HP, UnitType);
+        float AddUnitCount = m_Buffs.GetBuffTypeToValue(eBuffType.AddUnitCount, UnitType);
+        float DamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.DamageRate, UnitType);
+        float SkillDamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.SkillDamageRate, UnitType);
+        float AttackRange = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackRange, UnitType);
+        float AttackSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackSpeed, UnitType);
+        float MoveSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.MoveSpeed, UnitType);
+        float SkillCoolTime = m_Buffs.GetBuffTypeToValue(eBuffType.SkillCoolTime, UnitType);
+        float DamageReduction = m_Buffs.GetBuffTypeToValue(eBuffType.DamageReduction, UnitType);
+        
         m_BuffUnitData.Name = UnitData.Name;
         m_BuffUnitData.AP = UnitData.AP * AP;
         m_BuffUnitData.HP = UnitData.HP * HP;
@@ -274,6 +296,7 @@ public class Unit : MonoBehaviour
         m_BuffUnitData.AttackSpeed = UnitData.AttackSpeed * AttackSpeed;
         m_BuffUnitData.MoveSpeed = UnitData.MoveSpeed * MoveSpeed;
         m_BuffUnitData.SkillCoolTime = SkillCoolTime;
+        m_BuffUnitData.DamageReduction = DamageReduction;
     }
 
     private void SetStatus(bool resetHP = true)
@@ -306,8 +329,10 @@ public class Unit : MonoBehaviour
     {
         if (IsDie)
             return;
-
-        m_Target = UnitManager.Instance.FindUnit(this);
+        if (HP < 0)
+        {
+            UnitState = eUnitStateType.Die;
+        }
 
         UnitState = eUnitStateType.None;
 
@@ -453,13 +478,27 @@ public class Unit : MonoBehaviour
         });
         //ActiveSkillOperate(unit);
     }
-
     //죽임
     public virtual void Kill(Unit unit)
     {
         //적을 죽일 경우 발동하는 스킬 발동용
+        UnitState = eUnitStateType.Kill;
     }
-    
+
+    public virtual void Resurrection()
+    {
+        DelayAction(1, () =>
+        {
+            if (HP > 1)
+            {
+                m_UnitState = eUnitStateType.None;
+                m_RootObj.SetActive(true);
+                gameObject.EnableCollider();
+            }
+        });
+    }
+
+
     protected virtual void DelayAction(float delay, Action action)
     {
         if (gameObject.activeSelf)
@@ -479,10 +518,22 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void AddBuff(List<Buff> buff)
+    public void AddBuff(List<BuffData> buff)
     {
         m_Buffs.AddRange(buff);
         BuffDataUpdate();
+        SetStatus(false);
+    }
+    public void AddBuff(BuffData buff)
+    {
+        m_Buffs.Add(buff);
+        BuffDataUpdate();
+        SetStatus(false);
+    }
+
+    public void RemoveBuff(BuffData buff)
+    {
+        m_Buffs.Remove(buff);
     }
 
     public GameObject GetArrow()

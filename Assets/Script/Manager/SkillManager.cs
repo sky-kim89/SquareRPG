@@ -17,6 +17,7 @@ public class SkillManager : Singleton<SkillManager>
     private List<GameObject> SkillList = new List<GameObject>();
     public void Awake()
     {
+        //스킬 테이블화 작업 필요
         m_ActiveSkills.Add(typeof(HeavenlySwordSkill));
         m_ActiveSkills.Add(typeof(WheelWindSkill));
         m_ActiveSkills.Add(typeof(MultiShotSkill));

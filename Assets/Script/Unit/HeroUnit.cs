@@ -16,6 +16,7 @@ public class HeroUnit : Unit
     {
         Units.Clear();
         base.Init(data, enemy);
+        UnitType = eTargetType.Hero;
     }
 
     public override void Hit(Damage damage)
