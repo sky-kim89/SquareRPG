@@ -146,6 +146,8 @@ public class  UnitData
 //스킬이 없는 기본 유닛 = 부하
 public class Unit : MonoBehaviour
 {
+    public HeroUnit Hero = null;
+
     [SerializeField]
     protected UnitStateUI m_StateUI = null;
     [SerializeField]
@@ -275,16 +277,16 @@ public class Unit : MonoBehaviour
     private void BuffDataUpdate()
     {
         m_BuffUnitData = new UnitData();
-        float AP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AP, UnitType);
-        float HP = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.HP, UnitType);
-        float AddUnitCount = m_Buffs.GetBuffTypeToValue(eBuffType.AddUnitCount, UnitType);
-        float DamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.DamageRate, UnitType);
-        float SkillDamageRate = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.SkillDamageRate, UnitType);
-        float AttackRange = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackRange, UnitType);
-        float AttackSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.AttackSpeed, UnitType);
-        float MoveSpeed = 1 + m_Buffs.GetBuffTypeToValue(eBuffType.MoveSpeed, UnitType);
-        float SkillCoolTime = m_Buffs.GetBuffTypeToValue(eBuffType.SkillCoolTime, UnitType);
-        float DamageReduction = m_Buffs.GetBuffTypeToValue(eBuffType.DamageReduction, UnitType);
+        float AP = 1 + m_Buffs.GetBuffTypeToValue(this, eBuffType.AP);
+        float HP = 1 + m_Buffs.GetBuffTypeToValue(this, eBuffType.HP);
+        float AddUnitCount = m_Buffs.GetBuffTypeToValue(this, eBuffType.AddUnitCount);
+        float DamageRate = 1 + m_Buffs.GetBuffTypeToValue(this, eBuffType.DamageRate);
+        float SkillDamageRate = 1 + m_Buffs.GetBuffTypeToValue(this, eBuffType.SkillDamageRate);
+        float AttackRange = 1 + m_Buffs.GetBuffTypeToValue(this, eBuffType.AttackRange);
+        float AttackSpeed = 1 + m_Buffs.GetBuffTypeToValue(this, eBuffType.AttackSpeed);
+        float MoveSpeed = 1 + m_Buffs.GetBuffTypeToValue(this, eBuffType.MoveSpeed);
+        float SkillCoolTime = m_Buffs.GetBuffTypeToValue(this, eBuffType.SkillCoolTime);
+        float DamageReduction = m_Buffs.GetBuffTypeToValue(this, eBuffType.DamageReduction);
         
         m_BuffUnitData.Name = UnitData.Name;
         m_BuffUnitData.AP = UnitData.AP * AP;
@@ -440,7 +442,10 @@ public class Unit : MonoBehaviour
             //ActiveSkillOperate(damage.Unit);
 
             //Job.Hit(damage);
-            HP -= damage.DamagePoint;
+            float DamageReduction = m_BuffUnitData.DamageReduction;
+            if (DamageReduction >= 0.95f)
+                DamageReduction = 0.95f;
+            HP -= damage.DamagePoint * (1f - DamageReduction);
             float hp = (float)HP / (float)MaxHP;
 
             if(m_StateUI != null)

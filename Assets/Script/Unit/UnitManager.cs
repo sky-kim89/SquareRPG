@@ -127,6 +127,7 @@ public class UnitManager : Singleton<UnitManager>
             unit.transform.position = hero.transform.position + new Vector3(0.8f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.4f) * (j % 2 == 0 ? 1 : -1));
             unit.Init(data.HalfData(), false);
             unit.SetStateCoolBack(eUnitStateType.Die, EndGameCheck);
+            unit.Hero = hero;
             hero.Units.Add(unit);
         }
 

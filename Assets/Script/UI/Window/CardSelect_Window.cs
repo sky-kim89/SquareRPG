@@ -30,7 +30,7 @@ public class CardSelect_Window : BackBaseWindow
 
     public override void OnInit()
     {
-        List<CardData> datas = GetRandomCard();
+        List<Card_BuffData> datas = GetRandomCard();
         for (int i = 0; i < datas.Count; i++)
         {
             m_CardList[i].Init(datas[i]);
@@ -47,13 +47,13 @@ public class CardSelect_Window : BackBaseWindow
         return m_CardDatas.OrderBy(c => UnityEngine.Random.value).Take(count).ToList();
     }
 
-    public List<CardData> GetRandomCard()
+    public List<Card_BuffData> GetRandomCard()
     {
         List<Type> types = PickRandomCards(3);
-        List<CardData> data = new List<CardData>();
+        List<Card_BuffData> data = new List<Card_BuffData>();
         for (int i = 0; i < types.Count; i++)
         {
-            data.Add((CardData)Activator.CreateInstance(types[i]));
+            data.Add((Card_BuffData)Activator.CreateInstance(types[i]));
         }
 
         return data;

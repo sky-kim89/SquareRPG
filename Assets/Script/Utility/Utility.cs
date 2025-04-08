@@ -29,13 +29,13 @@ public static class Utility
         }
     }
 
-    public static float GetBuffTypeToValue(this List<BuffData> buffs, eBuffType type, eTargetType unitType)
+    public static float GetBuffTypeToValue(this List<BuffData> buffs, Unit unit, eBuffType type)
     {
         float value = 0;
 
         for (int i = 0; i < buffs.Count; i++)
         {
-            Buff buff = buffs[i].BuffList.Find(temp => temp.eBuffType == type && temp.eTargetType == unitType );
+            Buff buff = buffs[i].BuffList.Find(temp => temp.eBuffType == type && temp.eTargetType == unit.UnitType);
             if (buff != null)
             {
                 switch (type)

@@ -13,7 +13,6 @@ public enum eGameFlowState
     StageClear,
     GameOver
 }
-
 public class GameManager : Singleton<GameManager>
 {
     //AP 가 적용되는 수치 비율
@@ -35,7 +34,8 @@ public class GameManager : Singleton<GameManager>
 
     //특성의로 인한 버프 리스트
     public List<BuffData> Buffs = new List<BuffData>();
-    public List<CardData> CardBuffs = new List<CardData>();
+    //수집 카드 -> 단발성 + 1회성 등 다양하게 있을 것 같음.
+    public List<CardBase> Cards = new List<CardBase>();
 
     private eGameFlowState m_eGameFlowState = eGameFlowState.MainMenu;
     public eGameFlowState eGameFlowState
@@ -87,10 +87,6 @@ public class GameManager : Singleton<GameManager>
         if (MyInfoManager.Instance.HeroSaveDatas.Count == 0)
         {
             MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
-            MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
-            MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
-            MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
-            MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
         }
 
         //m_eGameFlowState = eGameFlowState.MainMenu;
@@ -116,6 +112,7 @@ public class GameManager : Singleton<GameManager>
     //스테이지 승리
     public void GameWin()
     {
+        EconomyManager.Instance.StageClear(StageIndex);
         eGameFlowState = eGameFlowState.BattleResult;
         eGameFlowState = eGameFlowState.CardSelect;
         //GameStart(StageIndex);
