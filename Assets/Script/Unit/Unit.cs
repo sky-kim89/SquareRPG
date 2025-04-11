@@ -332,6 +332,7 @@ public class Unit : MonoBehaviour
         AP = m_BuffUnitData.AP * GameManager.Instance.Ap * (1f + UnitData.Level * GameManager.Instance.Level) * addAP;
         if (AP < 1) AP = 1;
         MaxHP = m_BuffUnitData.HP * GameManager.Instance.Hp * (1f + UnitData.Level * GameManager.Instance.Level) * addHP;
+        if (MaxHP < 1) MaxHP = 1;
         if (resetHP)
             HP = MaxHP;
         DamageRate = m_BuffUnitData.DamageRate;

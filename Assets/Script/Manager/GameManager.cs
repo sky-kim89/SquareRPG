@@ -151,6 +151,16 @@ public class GameManager : Singleton<GameManager>
         GameStart();
     }
 
+    public void AddUnit()
+    {
+        if (MyInfoManager.Instance.HeroSaveDatas.Count < 5)
+        {
+            UnitManager.Instance.Restore();
+            MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
+            eGameFlowState = eGameFlowState.StageStart;
+        }
+    }
+
     public void X2()
     {
         Time.timeScale = Time.timeScale == 1 ? 10 : 1;
