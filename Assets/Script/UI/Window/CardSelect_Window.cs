@@ -26,11 +26,23 @@ public class CardSelect_Window : BackBaseWindow
         m_CardDatas.Add(typeof(UnyieldingWillCard));
         m_CardDatas.Add(typeof(CombatReadyCard));
         m_CardDatas.Add(typeof(UnifiedMarchCard));
+        m_CardDatas.Add(typeof(SpoilsOfWarCard));
+        m_CardDatas.Add(typeof(VengefulSpiritsCard));
+        m_CardDatas.Add(typeof(DefensiveInstinctCard));
+        m_CardDatas.Add(typeof(LastStandCard));
+        m_CardDatas.Add(typeof(BerserkerBlowCard));
+
+
+        m_CardDatas.Add(typeof(StreamlinedTrainingCard));
+        m_CardDatas.Add(typeof(ShopNegotiatorCard));
+        m_CardDatas.Add(typeof(StageClearRewardCard));
+        m_CardDatas.Add(typeof(GoldenCollectorCard));
     }
 
     public override void OnInit()
     {
-        List<Card_BuffData> datas = GetRandomCard();
+        //WindowManager.Instance.CloseAll();
+        List<CardBase> datas = GetRandomCard();
         for (int i = 0; i < datas.Count; i++)
         {
             m_CardList[i].Init(datas[i]);
@@ -39,6 +51,7 @@ public class CardSelect_Window : BackBaseWindow
 
     public List<Type> PickRandomCards(int count)
     {
+        UnityEngine.Random.InitState(UnityEngine.Random.Range(0, (int)(System.DateTime.Now.Ticks)));
         // 카드 개수보다 적게 요청되었는지 체크
         if (count > m_CardDatas.Count)
             throw new System.Exception("Not enough cards to pick from.");
@@ -47,13 +60,13 @@ public class CardSelect_Window : BackBaseWindow
         return m_CardDatas.OrderBy(c => UnityEngine.Random.value).Take(count).ToList();
     }
 
-    public List<Card_BuffData> GetRandomCard()
+    public List<CardBase> GetRandomCard()
     {
         List<Type> types = PickRandomCards(3);
-        List<Card_BuffData> data = new List<Card_BuffData>();
+        List<CardBase> data = new List<CardBase>();
         for (int i = 0; i < types.Count; i++)
         {
-            data.Add((Card_BuffData)Activator.CreateInstance(types[i]));
+            data.Add((CardBase)Activator.CreateInstance(types[i]));
         }
 
         return data;

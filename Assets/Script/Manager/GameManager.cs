@@ -98,11 +98,19 @@ public class GameManager : Singleton<GameManager>
 
     public void GameStart()
     {
+        StageIndex = 1;
         eGameFlowState = eGameFlowState.StageStart;
     }
 
     private void GameStart(int stageIndex)
     {
+        Buffs.Clear();
+        EconomyManager.Instance.ClearEconomyData();
+        for (int i = 0; i < Cards.Count; i++)
+        {
+            Cards[i].Apply();
+        }
+
         UnitManager.Instance.RegisterMyUnit();
         UnitManager.Instance.InitEnemyUnit(stageIndex);
 
@@ -133,13 +141,10 @@ public class GameManager : Singleton<GameManager>
 
     public void ChangeUnit()
     {
+        UnitManager.Instance.Restore();
         int index = Random.Range(0, Table.NameTables.Length);
         MyInfoManager.Instance.HeroSaveDatas.Clear();
 
-        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
-        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
-        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
-        MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
         MyInfoManager.Instance.HeroSaveDatas.Add(Gacha().GetSaveData());
 
         UnitManager.Instance.InitMyUnit();

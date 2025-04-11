@@ -104,6 +104,7 @@ public class SkillEffect : MonoBehaviour
         else
         {
             Target.Hit(m_Damage);
+            ObjectPool.Instance.Restore(gameObject);
         }
 
         Index++;

@@ -35,42 +35,59 @@ public static class Utility
 
         for (int i = 0; i < buffs.Count; i++)
         {
-            Buff buff = buffs[i].BuffList.Find(temp => temp.eBuffType == type && temp.eTargetType == unit.UnitType);
-            if (buff != null)
+            if (buffs[i].IsApply)
             {
-                switch (type)
+                Buff buff = buffs[i].BuffList.Find(temp => temp.eBuffType == type && (temp.eTargetType == unit.UnitType || temp.eTargetType == eTargetType.All));
+                if (buff != null)
                 {
-                    case eBuffType.AP:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.HP:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.AddUnitCount:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.DamageRate:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.SkillDamageRate:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.AttackRange:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.AttackSpeed:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.MoveSpeed:
-                        value += buff.Value;
-                        break;
-                    case eBuffType.SkillCoolTime:
-                        value *= (1f - buff.Value);
-                        break;
+                    switch (type)
+                    {
+                        case eBuffType.AP:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.HP:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.AddUnitCount:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.DamageRate:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.SkillDamageRate:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.AttackRange:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.AttackSpeed:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.MoveSpeed:
+                            value += buff.Value;
+                            break;
+                        case eBuffType.SkillCoolTime:
+                            value *= (1f - buff.Value);
+                            break;
+                        case eBuffType.DamageReduction:
+                            value += buff.Value;
+                            break;
+                    }
                 }
             }
         }
 
         return value;
+    }
+
+    public static List<BuffData> GetBuffClone(this List<BuffData> buffs)
+    {
+        List<BuffData> retData = new List<BuffData>();
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            BuffData temp = buffs[i].Clone();
+            retData.Add(temp);
+        }
+        return retData;
     }
 }

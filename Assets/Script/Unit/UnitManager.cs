@@ -117,15 +117,17 @@ public class UnitManager : Singleton<UnitManager>
         HeroUnit hero = ObjectPool.Instance.GetObject<HeroUnit>(m_HeroPrefab, transform);
         //hero.isEnemy = false;
         hero.Init(data, false);
+        hero.AddBuff(GameManager.Instance.Buffs.GetBuffClone(), true);
         hero.SetStateCoolBack(eUnitStateType.Die, EndGameCheck);
         hero.transform.position = m_MyPoint[point].position;
 
-        for (int j = 0; j < data.UnitCount; j++)
+        for (int j = 0; j < hero.m_BuffUnitData.UnitCount; j++)
         {
             Unit unit = ObjectPool.Instance.GetObject<Unit>(m_UnitPrefab, transform);
             //unit.isEnemy = false;
             unit.transform.position = hero.transform.position + new Vector3(0.8f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.4f) * (j % 2 == 0 ? 1 : -1));
-            unit.Init(data.HalfData(), false);
+            unit.Init(hero.m_BuffUnitData.HalfData(), false);
+            unit.AddBuff(GameManager.Instance.Buffs.GetBuffClone(), true);
             unit.SetStateCoolBack(eUnitStateType.Die, EndGameCheck);
             unit.Hero = hero;
             hero.Units.Add(unit);

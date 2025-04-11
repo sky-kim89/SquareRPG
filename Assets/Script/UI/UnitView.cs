@@ -97,7 +97,7 @@ public class UnitView : MonoBehaviour
 
     private void Update()
     {
-        if (m_Unit != null)
+        if (m_Unit != null && m_Unit.SkillList.Count > 0)
         {
             m_Cool.fillAmount = (m_Unit.SkillList[0] as ActiveSkill).CoolPercent;
         }

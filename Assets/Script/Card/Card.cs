@@ -16,6 +16,7 @@ public class Card : MonoBehaviour
     private CardBase m_CardData = null;
     public void Init(CardBase card)
     {
+        m_CardData = card;
         m_Icon.sprite = InGameUI.Instance.GetSprite(card.Image);
         m_Title.text = card.Name;
         m_Description.text = card.Description;

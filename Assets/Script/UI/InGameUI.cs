@@ -14,10 +14,13 @@ public class InGameUI : Singleton<InGameUI>
 
     [SerializeField]
     private Text m_StageText = null;
+    [SerializeField]
+    private Text m_GoldText = null;
 
     public void UIUpdate()
     {
         m_StageText.text = string.Format("Stage : {0}", GameManager.Instance.StageIndex);
+        m_GoldText.text = EconomyManager.instance.Gold.ToString();
     }
 
     public void InitUnitView()

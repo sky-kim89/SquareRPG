@@ -182,6 +182,8 @@ public class Unit : MonoBehaviour
                 m_UnitState = value;
                 if (StateCoolBack.ContainsKey(value))
                     StateCoolBack[value]();
+
+                ApplyBuff();
             }
 
         }
@@ -190,6 +192,7 @@ public class Unit : MonoBehaviour
     public eTargetType UnitType = eTargetType.Minion;
     public bool IsDie { get { return m_UnitState == eUnitStateType.Die || m_UnitState == eUnitStateType.Dieing; } }
 
+    [SerializeField]
     protected List<BuffData> m_Buffs = new List<BuffData>();
 
     [SerializeField]
@@ -199,6 +202,8 @@ public class Unit : MonoBehaviour
     public float AP = 0;
     public float HP = 0;
     public float MaxHP = 0;
+
+    public float GetHpRatio { get { return HP / MaxHP; } }
 
     public float DamageRate = 0;
     public float SkillDamageRate { get { return m_BuffUnitData.SP * GameManager.Instance.Sp * m_BuffUnitData.SkillDamageRate; } }
@@ -270,7 +275,7 @@ public class Unit : MonoBehaviour
         for(int i = 0; i < SkillList.Count; i++)
         {
             if(SkillList[i] is PassiveSkill)
-                m_Buffs.Add((SkillList[i] as PassiveSkill).Buff);
+                m_Buffs.Add((SkillList[i] as PassiveSkill).Buff.Clone());
         }
     }
 
@@ -289,6 +294,11 @@ public class Unit : MonoBehaviour
         float DamageReduction = m_Buffs.GetBuffTypeToValue(this, eBuffType.DamageReduction);
         
         m_BuffUnitData.Name = UnitData.Name;
+        m_BuffUnitData.Level = UnitData.Level;
+        m_BuffUnitData.SP = UnitData.SP;
+        m_BuffUnitData.LP = UnitData.LP;
+        m_BuffUnitData.UnitColors = UnitData.UnitColors;
+        m_BuffUnitData.Weapon = UnitData.Weapon;
         m_BuffUnitData.AP = UnitData.AP * AP;
         m_BuffUnitData.HP = UnitData.HP * HP;
         m_BuffUnitData.AddUnitCount = UnitData.AddUnitCount + (int)AddUnitCount;
@@ -312,19 +322,19 @@ public class Unit : MonoBehaviour
                 break;
             case eWeaponType.Sword:
                 addAP = 1.1f;
-                addHP = 1.1f;
+                addHP = 1.25f;
                 break;
             case eWeaponType.Shield:
-                addHP = 1.2f;
+                addHP = 1.5f;
                 break;
         }
 
-        AP = UnitData.AP * GameManager.Instance.Ap * (1f + UnitData.Level * GameManager.Instance.Level) * addAP;
+        AP = m_BuffUnitData.AP * GameManager.Instance.Ap * (1f + UnitData.Level * GameManager.Instance.Level) * addAP;
         if (AP < 1) AP = 1;
-        MaxHP = UnitData.HP * GameManager.Instance.Hp * (1f + UnitData.Level * GameManager.Instance.Level) * addHP;
+        MaxHP = m_BuffUnitData.HP * GameManager.Instance.Hp * (1f + UnitData.Level * GameManager.Instance.Level) * addHP;
         if (resetHP)
             HP = MaxHP;
-        DamageRate = UnitData.DamageRate;
+        DamageRate = m_BuffUnitData.DamageRate;
     }
 
     void Update()
@@ -334,9 +344,8 @@ public class Unit : MonoBehaviour
         if (HP < 0)
         {
             UnitState = eUnitStateType.Die;
+            return;
         }
-
-        UnitState = eUnitStateType.None;
 
         if (m_Target == null)
         {
@@ -374,6 +383,21 @@ public class Unit : MonoBehaviour
         {
             if (SkillList[i] != null)
                 SkillList[i].CoolTime -= Time.deltaTime;
+        }
+
+        for (int i = 0; i < m_Buffs.Count; i++)
+        {
+            if(m_Buffs[i].IsApply && (m_Buffs[i].MaxDuration == 0 || m_Buffs[i].Duration > 0))
+            {
+                m_Buffs[i].Duration -= Time.deltaTime;
+                if(m_Buffs[i].TickDown(this))
+                {
+                    BuffDataUpdate();
+                }
+            }
+
+            if(m_Buffs[i].CoolTime > 0)
+                m_Buffs[i].CoolTime -= Time.deltaTime;
         }
     }
 
@@ -523,22 +547,37 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void AddBuff(List<BuffData> buff)
+    private void ApplyBuff()
+    {
+        bool isApply = false;
+        for (int i = 0; i < m_Buffs.Count; i++)
+        {
+            isApply |= m_Buffs[i].Apply(this); 
+        }
+
+        if(isApply)
+        {
+            BuffDataUpdate();
+        }
+    }
+
+    public void AddBuff(List<BuffData> buff, bool isInit = false)
     {
         m_Buffs.AddRange(buff);
-        BuffDataUpdate();
-        SetStatus(false);
+        ApplyBuff();
+        SetStatus(isInit);
     }
-    public void AddBuff(BuffData buff)
+    public void AddBuff(BuffData buff, bool isInit = false)
     {
         m_Buffs.Add(buff);
-        BuffDataUpdate();
-        SetStatus(false);
+        ApplyBuff();
+        SetStatus(isInit);
     }
 
     public void RemoveBuff(BuffData buff)
     {
-        m_Buffs.Remove(buff);
+        BuffData data = m_Buffs.Find(temp => temp.BuffName == buff.BuffName);
+        m_Buffs.Remove(data);
     }
 
     public GameObject GetArrow()
@@ -554,12 +593,12 @@ public class Unit : MonoBehaviour
     public void LevelUp(int level)
     {
         UnitData.Level += level;
-        SetStatus(false);
+        SetStatus();
     }
     public void AddUnit(int count)
     {
         UnitData.AddUnitCount += count;
-        SetStatus(false);
+        SetStatus();
         BuffDataUpdate();
     }
 

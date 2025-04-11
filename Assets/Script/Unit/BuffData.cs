@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum eBuffType
@@ -22,6 +23,7 @@ public enum eBuffType
 
 //버프 종류
 //중첩, 시간 제한, 타수?
+[System.Serializable]
 public class BuffData
 {
     //버프 고유 이름
@@ -31,7 +33,9 @@ public class BuffData
     public eUnitStateType eTriggerType = eUnitStateType.None;
     public List<Buff> BuffList = new List<Buff>();
 
-    public int MaxStack = 0;
+    public bool IsApply {  get { return Stack > 0 || eTriggerType == eUnitStateType.None; } }
+
+    public int MaxStack = 1;
     public int Stack = 0;
     //지속시간
     public float MaxDuration = 0;
@@ -44,19 +48,85 @@ public class BuffData
 
     public string ActiveEffect = string.Empty;
 
-    public Action<Unit> Apply = null;
+    public bool Apply(Unit unit)
+    {
+        if ((unit.UnitState == eTriggerType || eTriggerType == eUnitStateType.None )&& (MaxCoolTime == 0 || CoolTime < 0))
+        {
+            if (MaxStack > Stack)
+            {
+                Stack++;
+                Duration = MaxDuration;
+                CoolTime = MaxCoolTime;
+                if (Command != null)
+                    Command(unit);
+                for (int i = 0; i < BuffList.Count; i++)
+                {
+                    BuffList[i].Stack = Stack;
+                }
+                return true;
+            }
+
+            if (MaxStack == 0)
+            {
+                if (Command != null)
+                    Command(unit);
+            }
+        }
+
+        return false;
+    }
+
+    public bool TickDown(Unit unit)
+    {
+        if (MaxDuration == 0 || Duration < 0)
+        {
+            if (Stack > 0)
+            {
+                Stack--;
+                if (Stack > 0)
+                {
+                    Duration = MaxDuration;
+                }
+
+                for (int i = 0; i < BuffList.Count; i++)
+                {
+                    BuffList[i].Stack = Stack;
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public BuffData Clone()
+    {
+        BuffData copy = (BuffData)this.MemberwiseClone();
+        copy.BuffList = BuffList.Select(b => b.Clone()).ToList();
+        return copy;
+    }
+
+    public Action<Unit> Command = null;
 }
 
+[System.Serializable]
 public class Buff
 {
     public Buff(eTargetType unitType, eBuffType buffType, float value)
     {
         eTargetType = unitType;
         eBuffType = buffType;
-        Value = value;
+        m_Value = value;
     }
+    public Buff Clone()
+    {
+        return new Buff(this.eTargetType, this.eBuffType, this.m_Value);
+    }
+
+    public int Stack = 0;
 
     public eTargetType eTargetType = eTargetType.All;
     public eBuffType eBuffType = eBuffType.AP;
-    public float Value = 0;
+    private float m_Value = 0;
+    public float Value { get { return m_Value * Stack; } }
 }

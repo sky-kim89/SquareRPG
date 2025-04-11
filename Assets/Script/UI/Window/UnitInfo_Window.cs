@@ -72,7 +72,7 @@ public class UnitInfo_Window : BackBaseWindow
         m_AddUnitGold.text = ((m_Unit.UnitData.AddUnitCount + 1) * 100).ToString();
         m_AP.text = m_Unit.AP.ToString();
         m_HP.text = m_Unit.MaxHP.ToString();
-        m_UnitCount.text = (m_Unit.m_BuffUnitData.UnitCount + 1).ToString();
+        m_UnitCount.text = m_Unit.m_BuffUnitData.UnitCount.ToString();
 
         m_AttackSpeed.text = m_Unit.m_BuffUnitData.AttackSpeed.ToString();
         m_MoveSpeed.text = m_Unit.m_BuffUnitData.MoveSpeed.ToString();

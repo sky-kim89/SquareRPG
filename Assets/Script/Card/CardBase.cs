@@ -92,6 +92,7 @@ public class ReinforcementsCard : Card_BuffData
         Value = 1;
         Description = string.Format("부하 최대 수치가 {0} 증가", Value);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.Hero, eBuffType.AddUnitCount, Value));
     }
 }
@@ -104,6 +105,7 @@ public class TrainedTroopsCard : Card_BuffData
         Value = 0.2f;
         Description = string.Format("모든 부하의 공격력이 {0}% 증가", Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.AP, Value));
     }
 }
@@ -118,10 +120,10 @@ public class ChargeFormationCard : Card_BuffData
         Description = string.Format("근접형 부하의 이동속도가 {0}% 증가하지만 받는 피해가 {1}% 증가", Value * 400, Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Start;
-        Buff.Apply = (unit) =>
+        Buff.Command = (unit) =>
         {
             //Buff에 타겟에 대한 정보 추가하기
-            if (unit.UnitData.Weapon == eWeaponType.Sword || unit.UnitData.Weapon == eWeaponType.Shield)
+            if (unit.UnitData.Weapon == eWeaponType.Sword || unit.UnitData.Weapon == eWeaponType.Shield || unit.UnitData.Weapon == eWeaponType.Dagger)
             {
                 BuffData buff = new BuffData();
                 Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.MoveSpeed, Value * 4));
@@ -142,6 +144,7 @@ public class DisciplineCard : Card_BuffData
         Value = 0.05f;
         Description = string.Format("부하의 모든 능력치가 {0} 증가", Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.AP, Value));
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.HP, Value));
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.MoveSpeed, Value));
@@ -155,13 +158,13 @@ public class TacticalLinkCard_Rush : Card_BuffData
 {
     public TacticalLinkCard_Rush()
     {
-        Image = "TacticalLink:RushCard";
+        Image = "TacticalLinkRushCard";
         Name = "전술 연계: 돌진";
         Value = 1;
-        Description = string.Format("스킬 사용 시 0.5초 동안 부하가 이동속도 {0}% 증가", Value * 100);
+        Description = string.Format("이동 시작 시 0.5초 동안 부하가 이동속도 {0}% 증가", Value * 100);
         Buff = new BuffData();
-        Buff.eTriggerType = eUnitStateType.Skilling;
-        Buff.MaxCoolTime = 0.5f;
+        Buff.eTriggerType = eUnitStateType.Move;
+        Buff.MaxDuration = 0.5f;
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.MoveSpeed, Value));
     }
 }
@@ -175,6 +178,7 @@ public class FixedFormationCard : Card_BuffData
         Value = 0.1f;
         Description = string.Format("모든 유닛이 넉백 면역을 얻고 최대 체력이 {0}% 증가", Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         //Buff.BuffList.Add(eBuffType.KnockbackImmune, Value);
         Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.HP, Value));
     }
@@ -189,6 +193,7 @@ public class BattlefieldAuraCard : Card_BuffData
         Value = 0.2f;
         Description = string.Format("모든 유닛이 공격속도가 {0}% 증가", Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.AttackSpeed, Value));
     }
 }
@@ -202,6 +207,7 @@ public class BerserkOrderCard : Card_BuffData
         Value = 0.25f;
         Description = string.Format("부하들의 공격력이 {0}%증가하지만, 받는 피해가 {1}%증가.", Value * 200, Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.AP, Value*2));
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.DamageReduction, -Value));
     }
@@ -214,8 +220,9 @@ public class CostoftheHordeCard : Card_BuffData
         Image = "CostoftheHordeCard";
         Name = "무리의 대가";
         Value = 0.25f;
-        Description = string.Format("부하 최대 수 +{0}, 대신 영웅 최대 체력 {1}%", Value * 2000, Value * 100);
+        Description = string.Format("부하 최대 수 +{0}, 대신 영웅 최대 체력 {1}%", Value * 20, Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.Hero, eBuffType.AddUnitCount, Value * 20));
         Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.HP, -Value));
     }
@@ -230,10 +237,12 @@ public class UnyieldingWillCard : Card_BuffData
         Value = 0.2f;
         Description = string.Format("부하가 사망 시 {0}% 확률로 1초 후 부활 (1회)", Value * 100);
         Buff = new BuffData();
+        Buff.BuffName = "UnyieldingWillCard";
         Buff.eTriggerType = eUnitStateType.Die;
-        Buff.Apply = (unit) =>
+        Buff.MaxStack = 0;
+        Buff.Command = (unit) =>
         {
-            if (Random.Range(0, 10) > (Value * 10) + 1)
+            if (Random.Range(0, 10) < (Value * 10))
             {
                 unit.HP = unit.MaxHP;
                 unit.Resurrection();
@@ -251,6 +260,7 @@ public class CombatReadyCard : Card_BuffData
         Value = 0.3f;
         Description = string.Format("모든 영웅의 시작 체력이 {0}% 증가합니다.", Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.Hero, eBuffType.HP, Value));
     }
 }
@@ -264,6 +274,7 @@ public class UnifiedMarchCard : Card_BuffData
         Value = 0.2f;
         Description = string.Format("영웅 및 부하 이동속도 {0}% 증가", Value * 100);
         Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.MoveSpeed, Value));
     }
 }
@@ -277,7 +288,8 @@ public class SpoilsOfWarCard : Card_BuffData
         Description = string.Format("영웅가 적 처치 시 골드 {0}를 획득합니다.", Value);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Kill;
-        Buff.Apply = (unit) =>
+        Buff.MaxStack = 0;
+        Buff.Command = (unit) =>
         {
             if(unit.UnitType == eTargetType.Hero)
             {
@@ -296,8 +308,8 @@ public class VengefulSpiritsCard : Card_BuffData
         Value = 0.02f;
         Description = string.Format("부하가 사망할 때마다 영웅의 공격력이 {0}% 증가합니다.", Value * 100);
         Buff = new BuffData();
-        Buff.eTriggerType = eUnitStateType.Kill;
-        Buff.Apply = (unit) =>
+        Buff.eTriggerType = eUnitStateType.Die;
+        Buff.Command = (unit) =>
         {
             if (unit.UnitType == eTargetType.Minion)
             {
@@ -305,6 +317,71 @@ public class VengefulSpiritsCard : Card_BuffData
                 BuffData buff = new BuffData();
                 buff.BuffList.Add(new Buff(eTargetType.Hero, eBuffType.AP, Value));
                 unit.Hero.AddBuff(buff);
+            }
+        };
+    }
+}
+
+public class DefensiveInstinctCard : Card_BuffData
+{
+    public DefensiveInstinctCard()
+    {
+        Image = "DefensiveInstinctCard";
+        Name = "방어 본능";
+        Value = 0.3f;
+        Description = string.Format("피격 시 3초간 이동속도가 {0}% 증가합니다.", Value * 100);
+        Buff = new BuffData();
+        Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.MoveSpeed, Value));
+        Buff.eTriggerType = eUnitStateType.Hit;
+        Buff.MaxDuration = 3;
+    }
+}
+public class LastStandCard : Card_BuffData
+{
+    public LastStandCard()
+    {
+        Image = "LastStandCard";
+        Name = "최후의 항전";
+        Value = 0.3f;
+        Description = string.Format("체력 30% 이하일 때 받는 피해 {0}% 감소", Value * 100);
+        Buff = new BuffData();
+        Buff.BuffName = "LastStandCard";
+        Buff.eTriggerType = eUnitStateType.Hit;
+        Buff.MaxStack = 0;
+        Buff.Command = (unit) =>
+        {
+            if (unit.GetHpRatio <= 0.3f)
+            {
+                unit.RemoveBuff(Buff);
+                //추후 테이블화 하면서 BuffID 부여 하고 중첩 시 스텍 증가로 수정 진행 예정
+                BuffData buff = new BuffData();
+                buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.DamageReduction, Value));
+                unit.AddBuff(buff);
+            }
+        };
+    }
+}
+
+public class BerserkerBlowCard : Card_BuffData
+{
+    public BerserkerBlowCard()
+    {
+        Image = "BerserkerBlowCard";
+        Name = "광전사의 일격";
+        Value = 0.5f;
+        Description = string.Format("공격 시 10% 확률로 공격속도가 {0}% 증가합니다. (3초)", Value * 100);
+        Buff = new BuffData();
+        Buff.eTriggerType = eUnitStateType.Attack;
+        Buff.MaxStack = 0;
+        Buff.Command = (unit) =>
+        {
+            if (Random.Range(0, 20) < 2)
+            {
+                //추후 테이블화 하면서 BuffID 부여 하고 중첩 시 스텍 증가로 수정 진행 예정
+                BuffData buff = new BuffData();
+                buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.AttackSpeed, Value));
+                buff.MaxDuration = 3;
+                unit.AddBuff(buff);
             }
         };
     }

@@ -34,7 +34,7 @@ public class EconomyManager : Singleton<EconomyManager>
         //골드 버프 관련해서 적용 필요
         float GoldGainBonus = 1;
         if (EconomyData.ContainsKey(eEconomyCardType.GoldGainBonus))
-            GoldGainBonus = EconomyData[eEconomyCardType.GoldGainBonus];
+            GoldGainBonus += EconomyData[eEconomyCardType.GoldGainBonus];
         m_Gold += (int)(gold * GoldGainBonus) ;
     }
 
@@ -42,7 +42,7 @@ public class EconomyManager : Singleton<EconomyManager>
     {
         float SoulGainBonus = 1;
         if (EconomyData.ContainsKey(eEconomyCardType.SoulGainBonus))
-            SoulGainBonus = EconomyData[eEconomyCardType.SoulGainBonus];
+            SoulGainBonus += EconomyData[eEconomyCardType.SoulGainBonus];
         m_Soul += (int)(Soul * SoulGainBonus) ;
     }
 
@@ -70,7 +70,11 @@ public class EconomyManager : Singleton<EconomyManager>
 
     public void StageClear(int stage)
     {
-        AddGold(Mathf.FloorToInt(100 * Mathf.Sqrt(stage)));
+        float StageClearGold = 1;
+        if (EconomyData.ContainsKey(eEconomyCardType.StageClearGold))
+            StageClearGold += EconomyData[eEconomyCardType.StageClearGold];
+
+        AddGold(Mathf.FloorToInt(100 * Mathf.Sqrt(stage) * StageClearGold));
         AddSoul(Mathf.FloorToInt(Mathf.Sqrt(stage)));
     }
 
@@ -80,5 +84,9 @@ public class EconomyManager : Singleton<EconomyManager>
             EconomyData[economyData] += count;
         else
             EconomyData.Add(economyData, count);
+    }
+    public void ClearEconomyData()
+    {
+        EconomyData.Clear();
     }
 }
