@@ -22,7 +22,7 @@ public class UnitManager : Singleton<UnitManager>
     public List<HeroUnit> MyHeroUniy = new List<HeroUnit>();
     public List<HeroUnit> EnemyHeroUniy = new List<HeroUnit>();
 
-    private List<UnitData> MyUnitData = new List<UnitData>();
+    public List<UnitData> MyUnitData = new List<UnitData>();
 
     [SerializeField]
     private GameObject m_HeroPrefab = null;
@@ -163,6 +163,7 @@ public class UnitManager : Singleton<UnitManager>
                 unit.transform.position = hero.transform.position + new Vector3(-0.8f * (1 + (int)(j * 0.1f)), 0, (j % 10 * 0.4f) * (j % 2 == 0 ? 1 : -1));
                 unit.Init(data.HalfData(), true);
                 unit.SetStateCoolBack(eUnitStateType.Die, EndGameCheck);
+                unit.Hero = hero;
                 hero.Units.Add(unit);
             }
 
@@ -213,6 +214,16 @@ public class UnitManager : Singleton<UnitManager>
                 ChangeLayerRecursively(MyHeroUniy[i].Units[j].gameObject, layerMask);
             }
         }
+    }
+
+    public void AddUnit(UnitData unitData)
+    {
+        MyUnitData.Add(unitData);
+    }
+
+    public void RemoveUnit()
+    {
+
     }
 
     public void Restore()

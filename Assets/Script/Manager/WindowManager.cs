@@ -10,6 +10,8 @@ public enum WindowIds
     UnitInfo_Window,
     CardSelect_Window,
     GameOver_Window,
+    UnitShop_Window,
+    BattleResult_Window,
 }
 
 public class WindowManager : MonoBehaviour

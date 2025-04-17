@@ -98,8 +98,10 @@ public class  UnitData
     public float SkillCoolTime = 1;
     public float DamageReduction = 0;
 
-    public Skill[] Skills = new Skill[2];
+    public Skill[] Skills = new Skill[4];
     public Color[] UnitColors = new Color[5];
+
+    public int OpenSkill = 1;
 
     public UnitData HalfData()
     {
@@ -214,6 +216,9 @@ public class Unit : MonoBehaviour
     [SerializeField]
     public List<Skill> SkillList = new List<Skill>();
 
+    public SaveDamageStats SaveDamageStats = new SaveDamageStats();
+    public int OpneSkill = 0;
+
     public virtual void Init(UnitData data, bool enemy)
     {
         UnitData = data; 
@@ -222,6 +227,7 @@ public class Unit : MonoBehaviour
         UnitState = eUnitStateType.Start;
         m_Buffs.Clear();
         StateCoolBack.Clear();
+        SaveDamageStats.ReSet();
         SetStatus();
         InitSkill();
         BuffDataUpdate();
@@ -274,8 +280,11 @@ public class Unit : MonoBehaviour
 
         for(int i = 0; i < SkillList.Count; i++)
         {
-            if(SkillList[i] is PassiveSkill)
+            if (SkillList[i] is PassiveSkill && UnitData.OpenSkill > OpneSkill)
+            {
+                OpneSkill++;
                 m_Buffs.Add((SkillList[i] as PassiveSkill).Buff.Clone());
+            }
         }
     }
 
@@ -295,6 +304,7 @@ public class Unit : MonoBehaviour
         
         m_BuffUnitData.Name = UnitData.Name;
         m_BuffUnitData.Level = UnitData.Level;
+        m_BuffUnitData.Grade = UnitData.Grade;
         m_BuffUnitData.SP = UnitData.SP;
         m_BuffUnitData.LP = UnitData.LP;
         m_BuffUnitData.UnitColors = UnitData.UnitColors;
@@ -379,7 +389,8 @@ public class Unit : MonoBehaviour
             }
         }
 
-        AttackSkill.CoolTime -= m_BuffUnitData.AttackSpeed * Time.deltaTime;
+        float attackSpeed = m_BuffUnitData.AttackSpeed > 5 ? 5 : m_BuffUnitData.AttackSpeed;
+        AttackSkill.CoolTime -= attackSpeed * Time.deltaTime;
         for (int i = 0; i < SkillList.Count; i++)
         {
             if (SkillList[i] != null)
@@ -470,10 +481,13 @@ public class Unit : MonoBehaviour
             float DamageReduction = m_BuffUnitData.DamageReduction;
             if (DamageReduction >= 0.95f)
                 DamageReduction = 0.95f;
-            HP -= damage.DamagePoint * (1f - DamageReduction);
+            float damagePoint = damage.DamagePoint * (1f - DamageReduction);
+            HP -= damagePoint;
             float hp = (float)HP / (float)MaxHP;
 
-            if(m_StateUI != null)
+            CalculateDamageMeter(damage);
+
+            if (m_StateUI != null)
                 m_StateUI.SetHP(hp);
             //m_StateUI.Hit(damage.Damage);
             if (HP <= 0)
@@ -484,6 +498,29 @@ public class Unit : MonoBehaviour
             {
                 m_Animator.Play("Hit");
             }
+        }
+    }
+
+    public void CalculateDamageMeter(Damage damage)
+    {
+        float DamageReduction = m_BuffUnitData.DamageReduction;
+        float damagePoint = damage.DamagePoint * (1f - DamageReduction);
+        float damageReduction = damage.DamagePoint * DamageReduction;
+
+        if(damage.Unit.UnitType == eTargetType.Hero)
+            damage.Unit.SaveDamageStats.Damage += damagePoint;
+        else
+            damage.Unit.Hero.SaveDamageStats.Damage += damagePoint;
+
+        if (UnitType == eTargetType.Hero)
+        {
+            SaveDamageStats.DamageDealt += damagePoint;
+            SaveDamageStats.DamageReduced += damageReduction;
+        }
+        else
+        {
+            Hero.SaveDamageStats.DamageDealt += damagePoint;
+            Hero.SaveDamageStats.DamageReduced += damageReduction;
         }
     }
 

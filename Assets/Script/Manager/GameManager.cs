@@ -9,7 +9,6 @@ public enum eGameFlowState
     StageStart,
     InBattle,
     BattleResult,
-    CardSelect,
     StageClear,
     GameOver
 }
@@ -64,10 +63,8 @@ public class GameManager : Singleton<GameManager>
                 case eGameFlowState.BattleResult:
                     UnitManager.Instance.Restore();
                     StageIndex++;
+                    WindowManager.Instance.Open(WindowIds.BattleResult_Window);
                     //½Â¸® ÆË¾÷ + È÷¾î·Î º° µô/ÅÊÅ·/Èú Á¤»ê window
-                    break;
-                case eGameFlowState.CardSelect:
-                    WindowManager.Instance.Open(WindowIds.CardSelect_Window);
                     break;
                 case eGameFlowState.StageClear:
                     break;
@@ -122,7 +119,6 @@ public class GameManager : Singleton<GameManager>
     {
         EconomyManager.Instance.StageClear(StageIndex);
         eGameFlowState = eGameFlowState.BattleResult;
-        eGameFlowState = eGameFlowState.CardSelect;
         //GameStart(StageIndex);
         //GameStart(StageIndex);
     }

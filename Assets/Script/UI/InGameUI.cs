@@ -30,7 +30,7 @@ public class InGameUI : Singleton<InGameUI>
             if(UnitManager.Instance.MyHeroUniy.Count > i)
                 m_UnitViews[i].Init(UnitManager.Instance.MyHeroUniy[i]);
             else
-                m_UnitViews[i].Init(null);
+                m_UnitViews[i].gameObject.SetActive(false);
         }
 
         UIUpdate();

@@ -550,13 +550,35 @@
             get { return m_NameTables; }
         }
 
-        static private Color[] m_BobyColors = new Color[5]
+        static private Color[] m_StatsColors = new Color[5]
+        {
+            new Color32(192, 192, 192, 255),
+                new Color32(39, 101, 96, 255),
+                new Color32(35, 72, 117, 255),
+                new Color32(200, 45, 20, 255),
+                new Color32(234, 181, 23, 255)
+        };
+        static public Color[] StatsColors
+        {
+            get { return m_StatsColors; }
+        }
+
+
+        static private Color[] m_BobyColors = new Color[13]
         {
         Color.blue,
         Color.red,
         Color.gray,
         Color.yellow,
-        Color.green
+        Color.green,
+        new Color32(52, 152, 219, 255),
+        new Color32(46, 204, 113, 255),
+        new Color32(255, 127, 80, 255),
+        new Color32(142, 68, 173, 255),
+        new Color32(241, 196, 15, 255),
+        new Color32(26, 188, 156, 255),
+        new Color32(233, 30, 99, 255),
+        new Color32(0, 188, 212, 255),
         };
         static public Color[] BobyColors
         {
@@ -574,13 +596,21 @@
             get { return m_HeadColors; }
         }
 
-        static private Color[] m_HairColors = new Color[5]
+        static private Color[] m_HairColors = new Color[13]
         {
         Color.black,
         Color.red,
         Color.gray,
         Color.yellow,
-        Color.white
+        Color.white,
+        new Color32(192, 57, 43, 255),
+        new Color32(0, 0, 0, 255),
+        new Color32(189, 195, 199, 255),
+        new Color32(14, 98, 81, 255),
+        new Color32(185, 119, 14, 255),
+        new Color32(26, 35, 126, 255),
+        new Color32(230, 126, 34, 255),
+        new Color32(155, 89, 182, 255),
         };
 
         static public Color[] HairColors
