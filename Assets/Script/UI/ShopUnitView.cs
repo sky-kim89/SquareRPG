@@ -53,9 +53,9 @@ public class ShopUnitView : MonoBehaviour
         m_EyeR.color = m_Data.UnitColors[3];
         m_EyeL.color = m_Data.UnitColors[4];
 
-        m_Grade.sprite = InGameUI.Instance.GetSprite("Grade_" + (int)m_Data.Grade);
+        m_Grade.sprite = UIManager.Instance.GetSprite("Grade_" + (int)m_Data.Grade);
 
-        m_Jop.sprite = InGameUI.Instance.GetSprite(m_Data.Weapon.ToString());
+        m_Jop.sprite = UIManager.Instance.GetSprite(m_Data.Weapon.ToString());
     }
 
     public void OnClickUnitInfoOpenButton()

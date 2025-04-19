@@ -84,7 +84,7 @@ public class UnitInfo_Window : BackBaseWindow
         m_DamageRate.text = m_Unit.m_BuffUnitData.DamageRate * 100 + "%";
         m_DamageReduction.text = m_Unit.m_BuffUnitData.DamageReduction * 100 + "%";
 
-        m_Jop.sprite = InGameUI.Instance.GetSprite(m_Unit.m_BuffUnitData.Weapon.ToString());
+        m_Jop.sprite = UIManager.Instance.GetSprite(m_Unit.m_BuffUnitData.Weapon.ToString());
 
         m_LevelUpGold.text = m_Unit.UnitData.GetHeroLevelUpCost().ToString();
         m_AddUnitGold.text = m_Unit.UnitData.AddUnitCount < 10 ? m_Unit.UnitData.GetAddUnitCost().ToString() : "¿Ï·á";
@@ -92,7 +92,7 @@ public class UnitInfo_Window : BackBaseWindow
         m_HP.text = m_Unit.MaxHP.ToString();
         m_UnitCount.text = m_Unit.m_BuffUnitData.UnitCount.ToString();
 
-        m_Grade.sprite = InGameUI.Instance.GetSprite("Grade_" + (int)m_Unit.m_BuffUnitData.Grade);
+        m_Grade.sprite = UIManager.Instance.GetSprite("Grade_" + (int)m_Unit.m_BuffUnitData.Grade);
 
         m_AttackSpeed.text = m_Unit.m_BuffUnitData.AttackSpeed.ToString();
         m_MoveSpeed.text = m_Unit.m_BuffUnitData.MoveSpeed.ToString();
@@ -105,7 +105,7 @@ public class UnitInfo_Window : BackBaseWindow
         {
             if (m_Unit.SkillList[i] != null)
             {
-                m_Skills[i].sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[i].Data.Name);
+                m_Skills[i].sprite = UIManager.Instance.GetSprite(m_Unit.SkillList[i].Data.Name);
                 m_SkillTexts[i].text = string.Format(m_Unit.SkillList[i].Data.Description, m_Unit.SkillList[i].Data.Value * 100);
             }
         }

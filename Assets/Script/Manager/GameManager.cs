@@ -87,7 +87,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         //m_eGameFlowState = eGameFlowState.MainMenu;
-        eGameFlowState = eGameFlowState.StageStart;
+        //eGameFlowState = eGameFlowState.StageStart;
         //테이블 관련 로드
         //유져 정보 로드
         //초기 화면 구성
@@ -97,6 +97,11 @@ public class GameManager : Singleton<GameManager>
     {
         StageIndex = 1;
         eGameFlowState = eGameFlowState.StageStart;
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     private void GameStart(int stageIndex)
@@ -111,7 +116,7 @@ public class GameManager : Singleton<GameManager>
         UnitManager.Instance.RegisterMyUnit();
         UnitManager.Instance.InitEnemyUnit(stageIndex);
 
-        InGameUI.Instance.InitUnitView();
+        UIManager.Instance.InitUnitView();
     }
 
     //스테이지 승리

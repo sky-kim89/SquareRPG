@@ -74,12 +74,12 @@ public class UnitView : MonoBehaviour
         m_Level.text = unitData.Level.ToString();
         m_HP.fillAmount = 1;
         //m_UnitCount.text = unitData.UnitCount.ToString();
-        m_Grade.sprite = InGameUI.Instance.GetSprite("Grade_" + (int)unitData.Grade);
+        m_Grade.sprite = UIManager.Instance.GetSprite("Grade_" + (int)unitData.Grade);
 
-        m_Jop.sprite = InGameUI.Instance.GetSprite(unitData.Weapon.ToString());
+        m_Jop.sprite = UIManager.Instance.GetSprite(unitData.Weapon.ToString());
 
-        m_Skill_1.sprite = InGameUI.Instance.GetSprite(unitData.Skills[0].Data.Name);
-        m_Skill_2.sprite = InGameUI.Instance.GetSprite(unitData.Skills[1].Data.Name);
+        m_Skill_1.sprite = UIManager.Instance.GetSprite(unitData.Skills[0].Data.Name);
+        m_Skill_2.sprite = UIManager.Instance.GetSprite(unitData.Skills[1].Data.Name);
     }
 
     public void UIUpdate()
@@ -94,12 +94,12 @@ public class UnitView : MonoBehaviour
         m_Level.text = m_Unit.TotalLevel.ToString();
         m_HP.fillAmount = m_Unit.HP / m_Unit.MaxHP;
         m_UnitCount.text = m_Unit.LifeUnitCount.ToString();
-        m_Grade.sprite = InGameUI.Instance.GetSprite("Grade_" + (int)m_Unit.UnitData.Grade);
+        m_Grade.sprite = UIManager.Instance.GetSprite("Grade_" + (int)m_Unit.UnitData.Grade);
 
-        m_Jop.sprite = InGameUI.Instance.GetSprite(m_Unit.UnitData.Weapon.ToString());
+        m_Jop.sprite = UIManager.Instance.GetSprite(m_Unit.UnitData.Weapon.ToString());
 
-        m_Skill_1.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[0].Data.Name);
-        m_Skill_2.sprite = InGameUI.Instance.GetSprite(m_Unit.SkillList[1].Data.Name);
+        m_Skill_1.sprite = UIManager.Instance.GetSprite(m_Unit.SkillList[0].Data.Name);
+        m_Skill_2.sprite = UIManager.Instance.GetSprite(m_Unit.SkillList[1].Data.Name);
     }
 
     public void LevelUp()

@@ -106,7 +106,7 @@ public class UnitShop_Window : BackBaseWindow
 
         m_NameText.text = data.Name;
 
-        m_Jop.sprite = InGameUI.Instance.GetSprite(data.Weapon.ToString());
+        m_Jop.sprite = UIManager.Instance.GetSprite(data.Weapon.ToString());
 
         m_AP.text = data.AP.ToString();
         m_HP.text = data.HP.ToString();
@@ -115,14 +115,14 @@ public class UnitShop_Window : BackBaseWindow
         m_AttackRange.text = data.AttackRange.ToString();
         m_UnitCount.text = data.UnitCount.ToString();
 
-        m_Grade.sprite = InGameUI.Instance.GetSprite("Grade_" + (int)data.Grade);
+        m_Grade.sprite = UIManager.Instance.GetSprite("Grade_" + (int)data.Grade);
 
 
         for (int i = 0; i < data.Skills.Length; i++)
         {
             if (data.Skills[i] != null)
             {
-                m_Skills[i].sprite = InGameUI.Instance.GetSprite(data.Skills[i].Data.Name);
+                m_Skills[i].sprite = UIManager.Instance.GetSprite(data.Skills[i].Data.Name);
                 m_SkillTexts[i].text = string.Format(data.Skills[i].Data.Description, data.Skills[i].Data.Value * 100);
             }
         }
