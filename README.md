@@ -59,3 +59,5 @@
 25년 4월 2일 기준으로 약 4주정도 작업 하였고 주에 3~4일 1일 당 3~4시간씩 작업 하였습니다.
 
 빌드 : https://github.com/sky-kim89/SquareRPG/blob/main/SquareRPG_V0.apk
+
+경력 시술서 : https://docs.google.com/presentation/d/1wnBw1igcP-Pgn8-XLcIIVj0cmqQZCCIt11GesJSKY-0/edit?slide=id.p#slide=id.p
