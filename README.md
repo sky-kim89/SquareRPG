@@ -1,7 +1,11 @@
 # SquareRPG
 1인 개발로 진행 중인 로그라이크 형태의 시뮬레이션RPG 게임 입니다.
-개발 진행 사항 (20% 정도 완료)
+
+개발 진행 사항 (35% 정도 완료)
+
 ※ 1차 개발이 완료 된 후 각 테이더의 테이블화 진행 및 전체적인 리팩토링 진행 예정입니다.
+
+이미지는 에셋번들 활용 및 ChatGPT를 이용하여 제작하였습니다.
 
  ㅇ 인게임
  
@@ -55,3 +59,5 @@
 25년 4월 2일 기준으로 약 4주정도 작업 하였고 주에 3~4일 1일 당 3~4시간씩 작업 하였습니다.
 
 빌드 : https://github.com/sky-kim89/SquareRPG/blob/main/SquareRPG_V0.apk
+
+경력 시술서 : https://docs.google.com/presentation/d/1wnBw1igcP-Pgn8-XLcIIVj0cmqQZCCIt11GesJSKY-0/edit?slide=id.p#slide=id.p
