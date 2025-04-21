@@ -550,13 +550,14 @@
             get { return m_NameTables; }
         }
 
-        static private Color[] m_StatsColors = new Color[5]
+        static private Color[] m_StatsColors = new Color[6]
         {
             new Color32(192, 192, 192, 255),
                 new Color32(39, 101, 96, 255),
                 new Color32(35, 72, 117, 255),
                 new Color32(200, 45, 20, 255),
-                new Color32(234, 181, 23, 255)
+                new Color32(234, 181, 23, 255),
+                new Color32(234, 181, 23, 255),
         };
         static public Color[] StatsColors
         {

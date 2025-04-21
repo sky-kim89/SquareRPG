@@ -12,6 +12,7 @@ public enum WindowIds
     GameOver_Window,
     UnitShop_Window,
     BattleResult_Window,
+    UnitPlacement_Window,
 }
 
 public class WindowManager : MonoBehaviour

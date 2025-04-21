@@ -24,6 +24,9 @@ public class BattleResult_Window : BackBaseWindow
     [SerializeField]
     private List<ShowDamageMeterUI> m_ShowDamageMeterUI = new List<ShowDamageMeterUI>();
 
+    [SerializeField]
+    private GameObject m_ShopButton = null;
+
     public override void OnInit()
     {
         SaveDamageStats max = new SaveDamageStats();
@@ -38,18 +41,25 @@ public class BattleResult_Window : BackBaseWindow
             else
                 m_ShowDamageMeterUI[i].Init(null, max);
         }
+
+        m_ShopButton.SetActive(true);
     }
 
     public void OnClickShopButton()
     {
-        Close();
         WindowManager.Instance.Open<UnitShop_Window>(WindowIds.UnitShop_Window);
+        m_ShopButton.SetActive(false);
     }
 
     public void OnClickCardSelectButton()
     {
         Close();
         WindowManager.Instance.Open<CardSelect_Window>(WindowIds.CardSelect_Window);
+    }
+
+    public void OnClickPlacementButton()
+    {
+        WindowManager.Instance.Open<UnitPlacement_Window>(WindowIds.UnitPlacement_Window);
     }
 
     public override void BackButtonClick()

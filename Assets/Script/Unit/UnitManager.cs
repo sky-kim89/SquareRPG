@@ -142,14 +142,14 @@ public class UnitManager : Singleton<UnitManager>
 
         int temp = stage * stage;
         int addCount = stage / 5;
-        if (addCount > 10)
-            addCount = 10;
+        if (addCount > 30)
+            addCount = 30;
         int unitCount = stage > 5 ? 5 : stage;
         for (int i = 0; i < unitCount; i++)
         {
             HeroUnit hero = ObjectPool.Instance.GetObject<HeroUnit>(m_HeroPrefab, transform);
             UnitData data = UnitRandomMachine.GetUnitData((temp - i).ToString());
-            data.Level = stage;
+            data.Level = stage * 2;
             //hero.isEnemy = true;
             hero.Init(data.HalfData(), true);
             hero.SetStateCoolBack(eUnitStateType.Die, EndGameCheck);

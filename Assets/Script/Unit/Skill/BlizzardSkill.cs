@@ -27,7 +27,7 @@ public class BlizzardSkill : ActiveSkill
             unit.PlayAnimation(Data.Animation);
 
         SkillEffect skillEffect = SkillManager.Instance.GetSkillEffect<SkillEffect>(Data.TargetEffectIndex);
-        skillEffect.Init(target, new Damage(unit, Data.Value * unit.SkillDamageRate));
+        skillEffect.Init(target, GetSkillDamage(unit));
         skillEffect.transform.position = target.transform.position;
 
         CoolTime = Data.MaxCoolTime;

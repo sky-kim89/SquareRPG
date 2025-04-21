@@ -31,8 +31,8 @@ public class DaggerThrowSkill : ActiveSkill
         if (Data.Animation != string.Empty)
             unit.PlayAnimation(Data.Animation);
         SkillEffect skillEffect = SkillManager.Instance.GetSkillEffect<SkillEffect>(Data.TargetEffectIndex);
-        skillEffect.Init(target, new Damage(unit, Data.Value * unit.SkillDamageRate));
-        skillEffect.transform.position = unit.transform.position;
+		skillEffect.Init(target, GetSkillDamage(unit));
+		skillEffect.transform.position = unit.transform.position;
 
         if (ActiveCount >= count)
         {
@@ -43,6 +43,9 @@ public class DaggerThrowSkill : ActiveSkill
         {
             count++;
             CoolTime = activeTime;
-        }
+			skillEffect = SkillManager.Instance.GetSkillEffect<SkillEffect>(Data.TargetEffectIndex);
+			skillEffect.Init(target, GetSkillDamage(unit));
+			skillEffect.transform.position = unit.transform.position;
+		}
     }
 }

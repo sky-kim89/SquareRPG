@@ -93,21 +93,21 @@ public static class Utility
 
     public static int GetRecruitCost(this UnitData data)
     {
-        return (int)(100 * (int)Mathf.Pow(2, (int)data.Grade - 1) * EconomyManager.Instance.GetEconomyData(eEconomyCardType.ShopDiscount)); ; // 100, 200, 400, 800, 1600
+        return (int)(200 * (int)Mathf.Pow(2, (int)data.Grade - 1) * (2 - EconomyManager.Instance.GetEconomyData(eEconomyCardType.ShopDiscount))); // 100, 200, 400, 800, 1600
     }
 
     public static int GetHeroLevelUpCost(this UnitData data)
     {
-        return Mathf.FloorToInt(100 * Mathf.Pow(data.Level, 1.2f) * EconomyManager.Instance.GetEconomyData(eEconomyCardType.UpgradeCostDiscount));
+        return Mathf.FloorToInt(80 * Mathf.Pow(data.Level, 1.1f) * (2 - EconomyManager.Instance.GetEconomyData(eEconomyCardType.UpgradeCostDiscount)));
     }
 
     public static int GetAddUnitCost(this UnitData data)
     {
-        return (int)(200 * EconomyManager.Instance.GetEconomyData(eEconomyCardType.UpgradeCostDiscount)); ;
+        return (int)(300 * (2 - EconomyManager.Instance.GetEconomyData(eEconomyCardType.UpgradeCostDiscount)));
     }
 
     public static int GetSkillOpenCost(this UnitData data)
     {
-        return (int)(data.OpenSkill * 600 * EconomyManager.Instance.GetEconomyData(eEconomyCardType.UpgradeCostDiscount)); ;
+        return (int)(data.OpenSkill * 400 * (2 - EconomyManager.Instance.GetEconomyData(eEconomyCardType.UpgradeCostDiscount)));
     }
 }

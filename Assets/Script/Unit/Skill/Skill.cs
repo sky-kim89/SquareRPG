@@ -70,6 +70,11 @@ public class ActiveSkill : Skill
 
         CoolTime = Data.MaxCoolTime;
     }
+
+    public Damage GetSkillDamage(Unit unit )
+    {
+        return new Damage(unit, Data.Value * unit.SkillDamageRate * unit.DamageRate);
+    }
 }
 
 public class BuffSkill : Skill

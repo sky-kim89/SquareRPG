@@ -34,6 +34,7 @@ public class EconomyManager : Singleton<EconomyManager>
         //골드 버프 관련해서 적용 필요
         float GoldGainBonus = GetEconomyData(eEconomyCardType.GoldGainBonus);
         m_Gold += (int)(gold * GoldGainBonus) ;
+        GoldText.GoldUIUpdate();
     }
 
     public void AddSoul(int soul)
@@ -47,6 +48,7 @@ public class EconomyManager : Singleton<EconomyManager>
         if(m_Gold > use)
         {
             m_Gold -= use;
+            GoldText.GoldUIUpdate();
             return true;
         }
 

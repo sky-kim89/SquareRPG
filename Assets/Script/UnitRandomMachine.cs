@@ -19,18 +19,37 @@
             data.Weapon = (eWeaponType)Random.Range((int)eWeaponType.Sword, (int)eWeaponType.Last);
             int index = Random.Range(1, (int)eGradeType.Last);
             data.Grade = (eGradeType)index;
+
             switch(data.Weapon)
             {
                 case eWeaponType.Bow:
                     data.AttackRange = Random.Range(8f, 10f); ;
+                    data.AttackSkill = new BowAttackSKill();
                     break;
                 case eWeaponType.Wand:
-                    data.AttackRange = Random.Range(6f, 8f); ;
+                    data.AttackRange = Random.Range(5f, 7f); ;
+                    data.AttackSkill = new BowAttackSKill();
+                    data.SkillDamageRate += 0.5f;
                     break;
-                default:
+                case eWeaponType.Dagger:
+                    data.AttackSkill = new AttackSkill();
+                    data.MoveSpeed += 0.3f;
+                    data.AttackSkill.Data.Value = 0.5f;
+                    data.DamageRate += 0.3f;
+                    break;
+                case eWeaponType.Sword:
+                    data.AttackSkill = new AttackSkill();
                     data.AttackRange = 2f;
+                    data.DamageRate += 0.1f;
+                    data.DamageReduction += 0.1f;
+                    break;
+                case eWeaponType.Shield:
+                    data.AttackSkill = new AttackSkill();
+                    data.AttackRange = 2f;
+                    data.DamageReduction += 0.2f;
                     break;
             }
+
             SettingStats(data);
 
             index = Random.Range(0, Table.BobyColors.Length);

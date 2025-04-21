@@ -35,6 +35,12 @@ public class UnitShop_Window : BackBaseWindow
     private Text m_SP = null;
     [SerializeField]
     private Text m_LP = null;
+
+    [SerializeField]
+    private Text m_Attack = null;
+    [SerializeField]
+    private Text m_Health = null;
+
     [SerializeField]
     private Text m_UnitCount = null;
 
@@ -46,6 +52,14 @@ public class UnitShop_Window : BackBaseWindow
     [SerializeField]
     private Text m_DamageReduction = null;
 
+    [SerializeField]
+    private Text m_SkillDamageRate = null;
+    [SerializeField]
+    private Text m_AttackSpeed = null;
+    [SerializeField]
+    private Text m_MoveSpeed = null;
+    [SerializeField]
+    private Text m_GradeText = null;
     [SerializeField]
     private List<Image> m_Skills = new List<Image>();
     [SerializeField]
@@ -108,13 +122,24 @@ public class UnitShop_Window : BackBaseWindow
 
         m_Jop.sprite = UIManager.Instance.GetSprite(data.Weapon.ToString());
 
-        m_AP.text = data.AP.ToString();
-        m_HP.text = data.HP.ToString();
-        m_SP.text = data.SP.ToString();
-        m_LP.text = data.LP.ToString();
-        m_AttackRange.text = data.AttackRange.ToString();
-        m_UnitCount.text = data.UnitCount.ToString();
+        m_AP.text = data.AP.ToString("F0");
+        m_HP.text = data.HP.ToString("F0");
+        m_SP.text = data.SP.ToString("F0");
+        m_LP.text = data.LP.ToString("F0");
 
+        m_Attack.text = data.Attack.ToString("F0");
+        m_Health.text = data.Health.ToString("F0");
+
+        m_AttackRange.text = data.AttackRange.ToString("F1");
+        m_UnitCount.text = data.UnitCount.ToString("F1");
+        m_DamageRate.text = data.DamageRate.ToString("F1");
+        m_DamageReduction.text = data.DamageReduction.ToString("F1");
+
+        m_SkillDamageRate.text = data.SkillDamageRate.ToString("F1");
+        m_AttackSpeed.text = data.AttackSpeed.ToString("F1");
+        m_MoveSpeed.text = data.MoveSpeed.ToString("F1");
+        m_GradeText.text = data.Grade.ToString();
+        m_GradeText.color = Table.StatsColors[(int)data.Grade - 1];
         m_Grade.sprite = UIManager.Instance.GetSprite("Grade_" + (int)data.Grade);
 
 
@@ -127,10 +152,10 @@ public class UnitShop_Window : BackBaseWindow
             }
         }
 
-        for(int i = 0; i < m_StatsText.Count; i++)
-        {
-            m_StatsText[i].color = Table.StatsColors[(int)data.Grade - 1];
-        }
+        m_StatsText[0].color = Table.StatsColors[(int)data.AP / 4];
+        m_StatsText[1].color = Table.StatsColors[(int)data.SP / 4];
+        m_StatsText[2].color = Table.StatsColors[(int)data.HP / 4];
+        m_StatsText[3].color = Table.StatsColors[(int)data.LP / 4];
 
         m_UnitBuyText.text = data.GetRecruitCost().ToString();
         m_UnitBuy.gameObject.SetActive(m_IsShop);
@@ -141,7 +166,6 @@ public class UnitShop_Window : BackBaseWindow
     public override void BackButtonClick()
     {
         Close();
-        WindowManager.Instance.Open<CardSelect_Window>(WindowIds.CardSelect_Window);
     }
 
     private List<UnitData> GetShopUnitData()

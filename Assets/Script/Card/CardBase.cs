@@ -41,7 +41,7 @@ public class GoldenCollectorCard : Card_EconomyData
     {
         Image = "GoldenCollectorCard";
         Name = "황금 수집가";
-        Value = 0.15f;
+        Value = 0.1f;
         Description = string.Format("골드 획득 시 추가로 {0}% 더 얻음", Value * 100);
         EconomyData = eEconomyCardType.GoldGainBonus;
     }
@@ -53,9 +53,9 @@ public class StageClearRewardCard : Card_EconomyData
     {
         Image = "StageClearRewardCard";
         Name = "전투 보너스";
-        Description = string.Format("스테이지 클리어 시 추가 골드 획득량 {0}% 증가", 20.0);
-        EconomyData = eEconomyCardType.StageClearGold;
         Value = 0.2f;
+        Description = string.Format("스테이지 클리어 시 추가 골드 획득량 {0}% 증가", Value * 100);
+        EconomyData = eEconomyCardType.StageClearGold;
     }
 }
 
@@ -65,9 +65,9 @@ public class ShopNegotiatorCard : Card_EconomyData
     {
         Image = "ShopNegotiatorCard";
         Name = "상점 협상가";
-        Description = string.Format("상점 구매 비용 {0}% 감소", 30.0);
+        Value = 0.1f;
+        Description = string.Format("상점 구매 비용 {0}% 감소", Value * 100);
         EconomyData = eEconomyCardType.ShopDiscount;
-        Value = 0.3f;
     }
 }
 
@@ -77,9 +77,9 @@ public class StreamlinedTrainingCard : Card_EconomyData
     {
         Image = "StreamlinedTrainingCard";
         Name = "손쉬운 훈련";
-        Description = string.Format("업그레이드 비용이 {0}% 감소합니다.", 10.0);
-        EconomyData = eEconomyCardType.UpgradeCostDiscount;
         Value = 0.1f;
+        Description = string.Format("업그레이드 비용이 {0}% 감소합니다.", Value * 100);
+        EconomyData = eEconomyCardType.UpgradeCostDiscount;
     }
 }
 
@@ -117,7 +117,7 @@ public class ChargeFormationCard : Card_BuffData
         Image = "ChargeFormationCard";
         Name = "돌격대 포메이션";
         Value = 0.1f;
-        Description = string.Format("근접형 부하의 이동속도가 {0}% 증가하지만 받는 피해가 {1}% 증가", Value * 400, Value * 100);
+        Description = string.Format("근접형 부하의 이동속도가 {0}% 증가하지만 받는 피해가 {1}% 증가", Value * 600, Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Start;
         Buff.Command = (unit) =>
@@ -160,11 +160,11 @@ public class TacticalLinkCard_Rush : Card_BuffData
     {
         Image = "TacticalLinkRushCard";
         Name = "전술 연계: 돌진";
-        Value = 1;
-        Description = string.Format("이동 시작 시 0.5초 동안 부하가 이동속도 {0}% 증가", Value * 100);
+        Value = 1.5f;
+        Description = string.Format("이동 시작 시 2초 동안 부하가 이동속도 {0}% 증가", Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Move;
-        Buff.MaxDuration = 0.5f;
+        Buff.MaxDuration = 2f;
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.MoveSpeed, Value));
     }
 }
@@ -175,7 +175,7 @@ public class FixedFormationCard : Card_BuffData
     {
         Image = "FixedFormationCard";
         Name = "고정된 진형";
-        Value = 0.1f;
+        Value = 0.05f;
         Description = string.Format("모든 유닛이 넉백 면역을 얻고 최대 체력이 {0}% 증가", Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Start;
@@ -190,7 +190,7 @@ public class BattlefieldAuraCard : Card_BuffData
     {
         Image = "BattlefieldAuraCard";
         Name = "전장의 기운";
-        Value = 0.2f;
+        Value = 0.1f;
         Description = string.Format("모든 유닛이 공격속도가 {0}% 증가", Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Start;
@@ -205,7 +205,7 @@ public class BerserkOrderCard : Card_BuffData
         Image = "BerserkOrderCard";
         Name = "광란의 명령";
         Value = 0.25f;
-        Description = string.Format("부하들의 공격력이 {0}%증가하지만, 받는 피해가 {1}%증가.", Value * 200, Value * 100);
+        Description = string.Format("부하들의 공격력이 {0}%증가하지만, 받는 피해가 {1}%증가.", Value * 300, Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Start;
         Buff.BuffList.Add(new Buff(eTargetType.Minion, eBuffType.AP, Value*2));
@@ -257,7 +257,7 @@ public class CombatReadyCard : Card_BuffData
     {
         Image = "CombatReadyCard";
         Name = "전투 준비";
-        Value = 0.3f;
+        Value = 0.1f;
         Description = string.Format("모든 영웅의 시작 체력이 {0}% 증가합니다.", Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Start;
@@ -305,7 +305,7 @@ public class VengefulSpiritsCard : Card_BuffData
     {
         Image = "VengefulSpiritsCard";
         Name = "복수의 망령";
-        Value = 0.02f;
+        Value = 0.05f;
         Description = string.Format("부하가 사망할 때마다 영웅의 공격력이 {0}% 증가합니다.", Value * 100);
         Buff = new BuffData();
         Buff.eTriggerType = eUnitStateType.Die;
@@ -328,7 +328,7 @@ public class DefensiveInstinctCard : Card_BuffData
     {
         Image = "DefensiveInstinctCard";
         Name = "방어 본능";
-        Value = 0.3f;
+        Value = 0.5f;
         Description = string.Format("피격 시 3초간 이동속도가 {0}% 증가합니다.", Value * 100);
         Buff = new BuffData();
         Buff.BuffList.Add(new Buff(eTargetType.All, eBuffType.MoveSpeed, Value));

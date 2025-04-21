@@ -80,6 +80,9 @@ public class  UnitData
     public float SP = 1; //스킬 영향
     public float LP = 1; //리더쉽 (부하 관련)
 
+    public float Attack { get { return AP * GameManager.Instance.Ap * (1f + Level * GameManager.Instance.Level); } }
+    public float Health { get { return HP * GameManager.Instance.Hp * (1f + Level * GameManager.Instance.Level); } }
+
     public int Level = 1; //레벨
 
     public int AddLevel = 0;
@@ -98,6 +101,8 @@ public class  UnitData
     public float SkillCoolTime = 1;
     public float DamageReduction = 0;
 
+
+    public AttackSkill AttackSkill = null; // 평타
     public Skill[] Skills = new Skill[4];
     public Color[] UnitColors = new Color[5];
 
@@ -126,6 +131,7 @@ public class  UnitData
         data.UnitColors = UnitColors;
         data.Weapon = Weapon;
         data.MoveSpeed = MoveSpeed;
+        data.AttackSkill = AttackSkill;
         return data;
     }
 
@@ -259,22 +265,7 @@ public class Unit : MonoBehaviour
 
     private void InitSkill()
     {
-        switch (UnitData.Weapon)
-        {
-            case eWeaponType.Bow:
-            case eWeaponType.Wand:
-                AttackSkill = new BowAttackSKill();
-                break;
-            case eWeaponType.Dagger:
-                AttackSkill = new AttackSkill();
-                AttackSkill.Data.Value = 0.65f;
-                break;
-            case eWeaponType.Sword:
-            case eWeaponType.Shield:
-                AttackSkill = new AttackSkill();
-                break;
-        }
-
+        AttackSkill = UnitData.AttackSkill;
         SkillList.Clear();
         SkillList.AddRange(UnitData.Skills);
 
@@ -319,29 +310,14 @@ public class Unit : MonoBehaviour
         m_BuffUnitData.MoveSpeed = UnitData.MoveSpeed * MoveSpeed;
         m_BuffUnitData.SkillCoolTime = SkillCoolTime;
         m_BuffUnitData.DamageReduction = DamageReduction;
+        m_BuffUnitData.AttackSkill = UnitData.AttackSkill;
     }
 
     private void SetStatus(bool resetHP = true)
     {
-        float addAP = 1f;
-        float addHP = 1f;
-        switch (UnitData.Weapon)
-        {
-            case eWeaponType.Wand:
-                addAP = 1.1f;
-                break;
-            case eWeaponType.Sword:
-                addAP = 1.1f;
-                addHP = 1.25f;
-                break;
-            case eWeaponType.Shield:
-                addHP = 1.5f;
-                break;
-        }
-
-        AP = m_BuffUnitData.AP * GameManager.Instance.Ap * (1f + UnitData.Level * GameManager.Instance.Level) * addAP;
+        AP = m_BuffUnitData.Attack;
         if (AP < 1) AP = 1;
-        MaxHP = m_BuffUnitData.HP * GameManager.Instance.Hp * (1f + UnitData.Level * GameManager.Instance.Level) * addHP;
+        MaxHP = m_BuffUnitData.Health;
         if (MaxHP < 1) MaxHP = 1;
         if (resetHP)
             HP = MaxHP;
