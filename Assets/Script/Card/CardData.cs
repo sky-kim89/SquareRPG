@@ -4,17 +4,21 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-[System.Serializable]
-public abstract class CardBase
+public abstract class UIData
 {
     public string Image = string.Empty;
     public string Name = string.Empty;
     public string Description = string.Empty;
+}
+
+[System.Serializable]
+public abstract class CardData : UIData
+{
     public abstract void Apply();
 }
 
 [System.Serializable]
-public class Card_BuffData : CardBase
+public class Card_BuffData : CardData
 {
     public BuffData Buff = null;
     public float Value = 0;
@@ -25,7 +29,7 @@ public class Card_BuffData : CardBase
     }
 }
 
-public class Card_EconomyData : CardBase
+public class Card_EconomyData : CardData
 {
     public eEconomyCardType EconomyData = eEconomyCardType.AddGold;
     public float Value = 0;

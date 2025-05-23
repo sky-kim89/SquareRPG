@@ -34,7 +34,7 @@ public class GameManager : Singleton<GameManager>
     //특성의로 인한 버프 리스트
     public List<BuffData> Buffs = new List<BuffData>();
     //수집 카드 -> 단발성 + 1회성 등 다양하게 있을 것 같음.
-    public List<CardBase> Cards = new List<CardBase>();
+    public List<CardData> Cards = new List<CardData>();
 
     private eGameFlowState m_eGameFlowState = eGameFlowState.MainMenu;
     public eGameFlowState eGameFlowState

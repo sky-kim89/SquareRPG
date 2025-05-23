@@ -13,8 +13,8 @@ public class Card : MonoBehaviour
     [SerializeField]
     private Text m_Description = null;
 
-    private CardBase m_CardData = null;
-    public void Init(CardBase card)
+    private CardData m_CardData = null;
+    public void Init(CardData card)
     {
         m_CardData = card;
         m_Icon.sprite = UIManager.Instance.GetSprite(card.Image);
